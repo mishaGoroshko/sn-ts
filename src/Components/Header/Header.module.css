@@ -1,0 +1,10 @@
+.header {
+    grid-area: h; /*псевдоним*/
+    background-color: #bada96;
+    margin: 1px;
+    border-radius: 10px;
+}
+
+.header img {
+    width: 50px
+}

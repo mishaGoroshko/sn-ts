@@ -1,0 +1,27 @@
+.nav {
+    grid-area: n; /*псевдоним*/
+    background-color: #dea694;
+    padding: 10px;
+    margin: 1px;
+    border-radius: 10px;
+}
+
+.item{
+    color: white;
+    text-decoration: none;
+}
+
+.active {
+    color: gold;
+    text-decoration: none;
+}
+
+.settings{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.friends{
+    margin-top: 40px;
+}
+

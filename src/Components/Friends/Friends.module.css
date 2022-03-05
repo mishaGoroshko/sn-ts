@@ -1,0 +1,11 @@
+.friends{
+    display: inline-block;
+    margin: 5px;
+}
+
+
+.image{
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+}

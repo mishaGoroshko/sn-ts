@@ -1,0 +1,24 @@
+.app-wrapper {
+    margin: 0 auto;
+    display: grid;
+    width: 1200px;
+
+
+    grid-template-areas:
+            "h h"
+            "n c";
+
+    grid-template-rows: 60px 1fr; /* 2 строки fr - фрагмент*/
+    grid-template-columns: 2fr 10fr; /* 2 столбца*/
+    /*grit-gap: 10px*/
+}
+
+.app-wrapper-content {
+    grid-area: c; /*псевдоним*/
+
+    background-color: #b9b9ff;
+    margin: 1px;
+    border-radius: 10px;
+}
+
+
