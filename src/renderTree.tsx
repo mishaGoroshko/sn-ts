@@ -1,4 +1,4 @@
-import state, {addPost, onchangeTextarea, RootStateType} from "./Redux/state";
+import store from "./Redux/state";
 import ReactDOM from "react-dom";
 import {BrowserRouter} from "react-router-dom";
 import React from "react";
@@ -8,7 +8,7 @@ export const renderTree = () => {
     ReactDOM.render(
         <BrowserRouter>
             <React.StrictMode>
-                <App state={state} addPost={addPost} onchangeTextarea={onchangeTextarea}/>
+                <App store={store}/>
             </React.StrictMode>
         </BrowserRouter>,
         document.getElementById('root')

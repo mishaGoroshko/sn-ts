@@ -2,10 +2,10 @@ import React from 'react';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {renderTree} from "./renderTree";
-import {subscribe} from "./Redux/state";
+import store from "./Redux/state";
 
-subscribe(renderTree)
-
+store.subscribe(renderTree)
+renderTree()
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

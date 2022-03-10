@@ -8,25 +8,26 @@ import {Route, Routes} from "react-router-dom";
 import News from "./Components/News/News";
 import Music from "./Components/Music/Music";
 import Settings from "./Components/Settings/Settings";
-import {RootStateType} from "./Redux/state";
+import {StoreType} from "./Redux/state";
 
 type AppType = {
-    state: RootStateType
-    addPost:(postText: string)=>void
-    onchangeTextarea: (newText: string) => void
+    store: StoreType
 }
 
-const App: React.FC<AppType> = ({state,addPost,onchangeTextarea,...props}) => {
+const App: React.FC<AppType> = ({store, ...props}) => {
     return (
         <div className="app-wrapper">
             <Header/>
-            <Navbar friends={state.sidebar.friends}/>
+            <Navbar friends={store._state.sidebar.friends}/>
             <div className={'app-wrapper-content'}>
                 <Routes>
-                    <Route path="/profile/*" element={<Profile profilePage={state.profilePage}
-                                                                addPost={addPost} onchangeTextarea={onchangeTextarea}/>}/>
-                    <Route path="/dialogs/*" element={<Dialogs dialogsData={state.dialogsPage.dialogs}
-                                                               messagesData={state.dialogsPage.messages}/>}/>
+                    <Route path="/profile/*" element={<Profile profilePage={store._state.profilePage}
+                                                               dispatch={store.dispatch.bind(store)}
+                                                               // addPost={store.addPost.bind(store)}
+                                                               // onchangeTextarea={store.onchangeTextarea.bind(store)}
+                    />}/>
+                    <Route path="/dialogs/*" element={<Dialogs dialogsData={store._state.dialogsPage.dialogs}
+                                                               messagesData={store._state.dialogsPage.messages}/>}/>
                     <Route path="/news/*" element={<News/>}/>
                     <Route path="/music/*" element={<Music/>}/>
                     <Route path="/settings/*" element={<Settings/>}/>

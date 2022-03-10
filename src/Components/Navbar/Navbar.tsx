@@ -39,7 +39,7 @@ const Navbar: React.FC<NavbarType> = ({friends}) => {
                 </NavLink>
             </div>
             <div className={s.friends}>
-                <NavLink to={'/friends/'} className={navClick => navClick.isActive ? s.active : s.item}>
+                <NavLink to={'/friends'} className={navClick => navClick.isActive ? s.active : s.item}>
                     FRIENDS
                 </NavLink>
             </div>
