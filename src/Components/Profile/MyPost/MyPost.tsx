@@ -1,7 +1,8 @@
-import React, {ChangeEvent, LegacyRef, RefObject} from 'react';
+import React, {ChangeEvent} from 'react';
 import s from './MyPost.module.css';
 import Post from "./Post/Post";
-import {ActionsTypes, postType, ProfilePageType} from "../../../Redux/state";
+import {addPostAC, onchangeTextareaHandlerAC} from "../../../Redux/proofile-reducer";
+import {ActionsTypes, ProfilePageType} from "../../../Redux/state";
 
 
 type MyPostType = {
@@ -14,19 +15,17 @@ const MyPost: React.FC<MyPostType> = (props) => {
     let postsElement = props.profilePage.posts.map(post => <Post key={post.id} {...post}/>)
 
     // let newPostElement = React.createRef<HTMLTextAreaElement>()
-    // let addPost = () => {
-    //     if (newPostElement.current) {
-    //         props.addPost(newPostElement.current.value)
-    //     }
-    // }
+    // let addPost = () => {if (newPostElement.current) {props.addPost(newPostElement.current.value)}}
 
     let addPost = () => {
         // props.dispatch({type: "ADD-POST", postText: props.profilePage.messageForNewPost})
+        props.dispatch(addPostAC(props.profilePage.messageForNewPost))
 
     }
 
     const onchangeTextareaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        props.dispatch({type: "ONCHANGE-TEXT-AREA", newText: e.currentTarget.value})
+        // props.dispatch({type: "ONCHANGE-TEXT-AREA", newText: e.currentTarget.value})
+        props.dispatch(onchangeTextareaHandlerAC(e.currentTarget.value))
     }
 
 

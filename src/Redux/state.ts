@@ -1,3 +1,7 @@
+import {addPostAC, onchangeTextareaHandlerAC, proofileReducer} from "./proofile-reducer";
+import {addMessageAC, dialogsReducer, onchangeTextAreaMessageAC} from "./dialogs-reducer";
+import {sidebarReducer} from "./sidebar-reducer";
+
 export type postType = {
     id: number
     message: string
@@ -33,6 +37,7 @@ export type ProfilePageType = {
 export type DialogsPageType = {
     dialogs: Array<dialogType>
     messages: Array<messageType>
+    newMessageBody: string
 }
 
 export type RootStateType = {
@@ -49,16 +54,11 @@ export type StoreType = {
     dispatch: (action: ActionsTypes) => void
 }
 
-export type ActionsTypes = AddPostActionType | OnchangeTextAreaActionType
-
-type AddPostActionType = {
-    type: 'ADD-POST'
-    postText: string
-}
-type OnchangeTextAreaActionType = {
-    type: 'ONCHANGE-TEXT-AREA'
-    newText: string
-}
+export type ActionsTypes =
+    ReturnType<typeof addPostAC>
+    | ReturnType<typeof onchangeTextareaHandlerAC>
+    | ReturnType<typeof onchangeTextAreaMessageAC>
+    | ReturnType<typeof addMessageAC>
 
 const store: StoreType = {
     _state: {
@@ -104,7 +104,8 @@ const store: StoreType = {
                 {id: 3, message: 'Hello'},
                 {id: 4, message: 'Yo'},
                 {id: 5, message: 'Yo'}
-            ]
+            ],
+            newMessageBody: ''
         },
         sidebar: {
             friends: [
@@ -136,18 +137,10 @@ const store: StoreType = {
         return this._state
     },
     dispatch(action) {
-        if (action.type === 'ADD-POST') {
-            action.postText && this._state.profilePage.posts.push({
-                id: new Date().getTime(),
-                message: action.postText,
-                likeCounting: 0
-            })
-            this._state.profilePage.messageForNewPost = ''
-            this._onChange()
-        } else if (action.type === 'ONCHANGE-TEXT-AREA') {
-            this._state.profilePage.messageForNewPost = action.newText
-            this._onChange()
-        }
+        this._state.profilePage = proofileReducer(this._state.profilePage, action)
+        this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
+        this._state.sidebar = sidebarReducer(this._state.sidebar, action)
+        this._onChange()
     }
 }
 
