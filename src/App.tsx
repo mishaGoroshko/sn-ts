@@ -8,31 +8,29 @@ import {Route, Routes} from "react-router-dom";
 import News from "./Components/News/News";
 import Music from "./Components/Music/Music";
 import Settings from "./Components/Settings/Settings";
-import {DialogsPageType, StoreType} from "./Redux/state";
 import {Friends} from "./Components/Friends/Friends";
+import {ActionsTypes, RootStateType} from "./Redux/store";
 
 type AppType = {
-    store: StoreType
+    state: RootStateType
+    dispatch: (action: ActionsTypes) => void
 }
 
-const App: React.FC<AppType> = ({store, ...props}) => {
+const App: React.FC<AppType> = ({state, dispatch, ...props}) => {
     return (
         <div className="app-wrapper">
             <Header/>
-            <Navbar friends={store._state.sidebar.friends}/>
+            <Navbar friends={state.sidebar.friends}/>
             <div className={'app-wrapper-content'}>
                 <Routes>
-                    <Route path="/profile/*" element={<Profile profilePage={store._state.profilePage}
-                                                               dispatch={store.dispatch.bind(store)}
-                        // addPost={store.addPost.bind(store)}
-                        // onchangeTextarea={store.onchangeTextarea.bind(store)}
-                    />}/>
-                    <Route path="/dialogs/*" element={<Dialogs dialogsPage={store._state.dialogsPage}
-                                                               dispatch={store.dispatch.bind(store)}/>}/>
+                    <Route path="/profile/*" element={<Profile profilePage={state.profilePage}
+                                                               dispatch={dispatch}/>}/>
+                    <Route path="/dialogs/*" element={<Dialogs dialogsPage={state.dialogsPage}
+                                                               dispatch={dispatch}/>}/>
                     <Route path="/news/*" element={<News/>}/>
                     <Route path="/music/*" element={<Music/>}/>
                     <Route path="/settings/*" element={<Settings/>}/>
-                    <Route path="/friends/*" element={<Friends friends={store._state.sidebar.friends}/>}/>
+                    <Route path="/friends/*" element={<Friends friends={state.sidebar.friends}/>}/>
                 </Routes>
             </div>
         </div>

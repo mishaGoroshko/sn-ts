@@ -1,6 +1,6 @@
 import React from 'react';
 import s from './Friends.module.css'
-import {friendType} from "../../Redux/state";
+import {friendType} from "../../Redux/store";
 
 type FriendsType = {
     friends: Array<friendType>

@@ -1,8 +1,8 @@
 import React, {ChangeEvent} from 'react';
 import s from './MyPost.module.css';
 import Post from "./Post/Post";
-import {addPostAC, onchangeTextareaHandlerAC} from "../../../Redux/proofile-reducer";
-import {ActionsTypes, ProfilePageType} from "../../../Redux/state";
+import {addPostAC, onchangeTextareaHandlerAC} from "../../../Redux/profile-reducer";
+import {ActionsTypes, ProfilePageType} from "../../../Redux/store";
 
 
 type MyPostType = {

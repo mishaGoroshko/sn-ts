@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './DialogItem.module.css'
 import {NavLink} from "react-router-dom";
-import {dialogType} from "../../../../Redux/state";
+import {dialogType} from "../../../../Redux/store";
 
 type DialogItemType = dialogType
 

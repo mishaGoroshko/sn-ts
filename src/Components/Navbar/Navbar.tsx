@@ -1,7 +1,7 @@
 import React from 'react';
 import s from './Navbar.module.css'
 import {Link, NavLink} from "react-router-dom";
-import {friendType} from "../../Redux/state";
+import {friendType} from "../../Redux/store";
 import {Friends} from "../Friends/Friends";
 import {futimes} from "fs";
 

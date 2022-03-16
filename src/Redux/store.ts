@@ -1,4 +1,4 @@
-import {addPostAC, onchangeTextareaHandlerAC, proofileReducer} from "./proofile-reducer";
+import {addPostAC, onchangeTextareaHandlerAC, profileReducer} from "./profile-reducer";
 import {addMessageAC, dialogsReducer, onchangeTextAreaMessageAC} from "./dialogs-reducer";
 import {sidebarReducer} from "./sidebar-reducer";
 
@@ -137,7 +137,7 @@ const store: StoreType = {
         return this._state
     },
     dispatch(action) {
-        this._state.profilePage = proofileReducer(this._state.profilePage, action)
+        this._state.profilePage = profileReducer(this._state.profilePage, action)
         this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
         this._state.sidebar = sidebarReducer(this._state.sidebar, action)
         this._onChange()
