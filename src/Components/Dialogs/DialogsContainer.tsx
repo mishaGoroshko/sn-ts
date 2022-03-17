@@ -1,10 +1,10 @@
 import React from 'react';
 import {addMessageAC, onchangeTextAreaMessageAC} from "../../Redux/dialogs-reducer";
 import Dialogs from "./Dialogs";
-import {DialogsPageType} from "../../Redux/store";
+import {DialogsPageType, StoreType} from "../../Redux/store";
 
 type DialogsContainerType = {
-    store: any
+    store: StoreType
 }
 
 export const DialogsContainer: React.FC<DialogsContainerType> = ({store, ...props}) => {

@@ -9,9 +9,10 @@ import Music from "./Components/Music/Music";
 import Settings from "./Components/Settings/Settings";
 import {DialogsContainer} from "./Components/Dialogs/DialogsContainer";
 import {FriendsContainer} from "./Components/Friends/FriendsContainer";
+import {StoreType} from "./Redux/store";
 
 type AppType = {
-    store: any
+    store: StoreType
 }
 
 const App: React.FC<AppType> = ({store, ...props}) => {
@@ -21,7 +22,7 @@ const App: React.FC<AppType> = ({store, ...props}) => {
             <Navbar friends={store.getState().sidebar.friends}/>
             <div className={'app-wrapper-content'}>
                 <Routes>
-                    <Route path="/profile/*" element={<Profile store={store}/>}/>
+                    <Route path="/profile/*" element={<Profile/>}/>
                     <Route path="/dialogs/*" element={<DialogsContainer store={store}/>}/>
                     <Route path="/news/*" element={<News/>}/>
                     <Route path="/music/*" element={<Music/>}/>

@@ -3,7 +3,7 @@ import {friendType, StoreType} from "../../Redux/store";
 import {Friends} from "./Friends";
 
 type FriendsType = {
-    store:any
+    store:StoreType
 }
 
 export const FriendsContainer:React.FC<FriendsType> = ({store,...props}) => {
