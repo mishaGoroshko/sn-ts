@@ -4,11 +4,8 @@ import reportWebVitals from './reportWebVitals';
 import {renderTree} from "./renderTree";
 import {store} from "./Redux/redux-store";
 
-renderTree(store.getState())
-store.subscribe(() => {
-    let state = store.getState()
-    renderTree(state)
-})
+renderTree()
+store.subscribe(renderTree)
 
 
 // If you want to start measuring performance in your app, pass a function

@@ -8,10 +8,11 @@ import {addMessageAC, onchangeTextAreaMessageAC} from "../../Redux/dialogs-reduc
 
 type DialogsType = {
     dialogsPage: DialogsPageType
-    dispatch: (action: ActionsTypes) => void
+    addMessage: () => void
+    onchangeTextAreaMessage: (newText: string) => void
 }
 
-const Dialogs: React.FC<DialogsType> = ({dialogsPage, dispatch}) => {
+const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage,onchangeTextAreaMessage, ...props}) => {
 
     let dialogsElements = dialogsPage.dialogs.map(dialog => <DialogItem key={dialog.id} {...dialog}/>)
     let messagesElements = dialogsPage.messages.map(mes => <Message key={mes.id} {...mes}/>)
@@ -19,12 +20,12 @@ const Dialogs: React.FC<DialogsType> = ({dialogsPage, dispatch}) => {
     // const messageRef = React.createRef<HTMLTextAreaElement>()
     // const sendMessage = () => {alert(messageRef.current?.value)}
 
-    const onchangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        dispatch(onchangeTextAreaMessageAC(e.currentTarget.value))
+    const onchangeTextAreaMessageHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        onchangeTextAreaMessage(e.currentTarget.value)
     }
 
-    const onClickHandler = () => {
-        dispatch(addMessageAC(dialogsPage.newMessageBody))
+    const addMessageHandler = () => {
+        addMessage()
     }
 
     return (
@@ -34,9 +35,9 @@ const Dialogs: React.FC<DialogsType> = ({dialogsPage, dispatch}) => {
             </div>
             <div className={s.messages}>
                 {messagesElements}
-                <textarea value={dialogsPage.newMessageBody} onChange={onchangeHandler}
+                <textarea value={dialogsPage.newMessageBody} onChange={onchangeTextAreaMessageHandler}
                           placeholder={'enter yuor message'}/> {/*ref={messageRef}*/}
-                <button onClick={onClickHandler}>send</button>
+                <button onClick={addMessageHandler}>send</button>
                 {/*onClick={sendMessage}*/}
             </div>
         </div>

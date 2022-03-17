@@ -1,4 +1,4 @@
-import store, {ActionsTypes, ProfilePageType} from "./store";
+import {ActionsTypes, ProfilePageType} from "./store";
 
 let initialState: ProfilePageType = {
     messageForNewPost: 'XY',

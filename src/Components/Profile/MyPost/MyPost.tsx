@@ -1,44 +1,40 @@
 import React, {ChangeEvent} from 'react';
 import s from './MyPost.module.css';
 import Post from "./Post/Post";
-import {addPostAC, onchangeTextareaHandlerAC} from "../../../Redux/profile-reducer";
-import {ActionsTypes, ProfilePageType} from "../../../Redux/store";
+import {ProfilePageType} from "../../../Redux/store";
 
 
 type MyPostType = {
     profilePage: ProfilePageType
-    dispatch: (action: ActionsTypes) => void
+    addPost: (messageForNewPost: string) => void
+    onchangeTextarea: (newText: string) => void
 }
 
-const MyPost: React.FC<MyPostType> = (props) => {
+const MyPost: React.FC<MyPostType> = ({addPost, onchangeTextarea, profilePage, ...props}) => {
 
-    let postsElement = props.profilePage.posts.map(post => <Post key={post.id} {...post}/>)
+    let postsElement = profilePage.posts.map(post => <Post key={post.id} {...post}/>)
 
     // let newPostElement = React.createRef<HTMLTextAreaElement>()
     // let addPost = () => {if (newPostElement.current) {props.addPost(newPostElement.current.value)}}
 
-    let addPost = () => {
-        // props.dispatch({type: "ADD-POST", postText: props.profilePage.messageForNewPost})
-        props.dispatch(addPostAC(props.profilePage.messageForNewPost))
-
+    let addPostHandler = () => {
+        addPost(profilePage.messageForNewPost)
     }
 
     const onchangeTextareaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        // props.dispatch({type: "ONCHANGE-TEXT-AREA", newText: e.currentTarget.value})
-        props.dispatch(onchangeTextareaHandlerAC(e.currentTarget.value))
+        onchangeTextarea(e.currentTarget.value)
     }
-
 
     return (
         <div className={s.postBlock}>
             <h3>My posts</h3>
             <div>
                 <div>
-                    <textarea onChange={onchangeTextareaHandler} value={props.profilePage.messageForNewPost}/>
+                    <textarea onChange={onchangeTextareaHandler} value={profilePage.messageForNewPost}/>
                     {/*<textarea ref={newPostElement} value={props.profilePage.messageForNewPost}></textarea>*/}
                 </div>
                 <div>
-                    <button onClick={addPost}>add post</button>
+                    <button onClick={addPostHandler}>add post</button>
                 </div>
             </div>
             <div className={s.posts}>
