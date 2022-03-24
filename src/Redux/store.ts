@@ -1,52 +1,53 @@
 import {addPostAC, onchangeTextareaHandlerAC, profileReducer} from "./profile-reducer";
 import {addMessageAC, dialogsReducer, onchangeTextAreaMessageAC} from "./dialogs-reducer";
 import {sidebarReducer} from "./sidebar-reducer";
+import {v1} from 'uuid';
 
-export type postType = {
-    id: number
+type postType = {
+    id: string
     message: string
     likeCounting: number
 }
 
-export type dialogType = {
-    id: number
+type dialogType = {
+    id: string
     name: string
     image: string
 }
 
-export type messageType = {
-    id: number
+type messageType = {
+    id: string
     message: string
 }
 
-export type friendType = {
-    id: number
+type friendType = {
+    id: string
     name: string
     image: string
 }
 
-export type SidebarType = {
+type SidebarType = {
     friends: Array<friendType>
 }
 
-export type ProfilePageType = {
+type ProfilePageType = {
     messageForNewPost: string
     posts: Array<postType>
 }
 
-export type DialogsPageType = {
+type DialogsPageType = {
     dialogs: Array<dialogType>
     messages: Array<messageType>
     newMessageBody: string
 }
 
-export type RootStateType = {
+type RootStateType = {
     profilePage: ProfilePageType
     dialogsPage: DialogsPageType
     sidebar: SidebarType
 }
 
-export type StoreType = {
+type StoreType = {
     _state: RootStateType
     _onChange: () => void
     subscribe: (callback: () => void) => void
@@ -65,62 +66,62 @@ const store: StoreType = {
         profilePage: {
             messageForNewPost: 'XY',
             posts: [
-                {id: 1, message: 'Hi my first message ', likeCounting: 12},
-                {id: 2, message: 'Hello it\'s me ', likeCounting: 23},
+                {id: v1(), message: 'Hi my first message ', likeCounting: 12},
+                {id: v1(), message: 'Hello it\'s me ', likeCounting: 23},
             ]
         },
         dialogsPage: {
             dialogs: [
                 {
-                    id: 1,
+                    id: v1(),
                     name: 'Miha',
                     image: 'https://www.internet-technologies.ru/wp-content/uploads/2020/02/49817-307143.png'
                 },
                 {
-                    id: 2,
+                    id: v1(),
                     name: 'Alinka',
                     image: 'https://w7.pngwing.com/pngs/458/502/png-transparent-emoji-broken-heart-paw-patrol-love-heart-smiley.png'
                 },
                 {
-                    id: 3,
+                    id: v1(),
                     name: 'Polina',
                     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHKBtROJ2Tc0e9-aQ5BlDFo98XliTit9wXjQ&usqp=CAU'
                 },
-                {id: 4, name: 'Sasha', image: 'https://www.covenok.ru/files/tiny_images/training/161.png'},
+                {id: v1(), name: 'Sasha', image: 'https://www.covenok.ru/files/tiny_images/training/161.png'},
                 {
-                    id: 5,
+                    id: v1(),
                     name: 'Maja',
                     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGBPVAZMuLlW2Dfhqtwwp80B3P6TqQQMVdyg&usqp=CAU'
                 },
                 {
-                    id: 6,
+                    id: v1(),
                     name: 'IvanbIch',
                     image: 'https://i.pinimg.com/originals/66/12/e2/6612e2d02db90bfa78fd4afb2e2dc15c.jpg'
                 },
             ],
             messages: [
-                {id: 1, message: 'Hi'},
-                {id: 2, message: 'How are you'},
-                {id: 3, message: 'Hello'},
-                {id: 4, message: 'Yo'},
-                {id: 5, message: 'Yo'}
+                {id: v1(), message: 'Hi'},
+                {id: v1(), message: 'How are you'},
+                {id: v1(), message: 'Hello'},
+                {id: v1(), message: 'Yo'},
+                {id: v1(), message: 'Yo'}
             ],
             newMessageBody: ''
         },
         sidebar: {
             friends: [
                 {
-                    id: 1,
+                    id: v1(),
                     name: 'Miha',
                     image: 'https://www.internet-technologies.ru/wp-content/uploads/2020/02/49817-307143.png'
                 },
                 {
-                    id: 2,
+                    id: v1(),
                     name: 'Alinka',
                     image: 'https://w7.pngwing.com/pngs/458/502/png-transparent-emoji-broken-heart-paw-patrol-love-heart-smiley.png'
                 },
                 {
-                    id: 3,
+                    id: v1(),
                     name: 'Polina',
                     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHKBtROJ2Tc0e9-aQ5BlDFo98XliTit9wXjQ&usqp=CAU'
                 },
@@ -144,4 +145,3 @@ const store: StoreType = {
     }
 }
 
-export default store

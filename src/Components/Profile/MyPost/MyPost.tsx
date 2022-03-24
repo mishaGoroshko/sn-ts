@@ -1,14 +1,8 @@
 import React, {ChangeEvent} from 'react';
 import s from './MyPost.module.css';
 import Post from "./Post/Post";
-import {ProfilePageType} from "../../../Redux/store";
+import {MyPostType} from './MyPostContainer';
 
-
-type MyPostType = {
-    profilePage: ProfilePageType
-    addPost: (messageForNewPost: string) => void
-    onchangeTextarea: (newText: string) => void
-}
 
 const MyPost: React.FC<MyPostType> = ({addPost, onchangeTextarea, profilePage, ...props}) => {
 
@@ -18,7 +12,7 @@ const MyPost: React.FC<MyPostType> = ({addPost, onchangeTextarea, profilePage, .
     // let addPost = () => {if (newPostElement.current) {props.addPost(newPostElement.current.value)}}
 
     let addPostHandler = () => {
-        addPost(profilePage.messageForNewPost)
+        addPost()
     }
 
     const onchangeTextareaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {

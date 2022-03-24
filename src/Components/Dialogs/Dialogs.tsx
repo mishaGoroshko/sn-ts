@@ -1,18 +1,11 @@
 import React, {ChangeEvent} from 'react';
 import s from './Dialogs.module.css'
-import DialogItem from "./DialogComponents/DialogItem/DialogsItem";
-import Message from "./DialogComponents/Message/Message";
-import {ActionsTypes, DialogsPageType} from "../../Redux/store";
-import {addMessageAC, onchangeTextAreaMessageAC} from "../../Redux/dialogs-reducer";
-// import {dialogType, messageType} from "../../index";
+import DialogItem from './DialogComponents/DialogItem/DialogsItem';
+import Message from './DialogComponents/Message/Message';
+import {DialogsType} from './DialogsContainer';
 
-type DialogsType = {
-    dialogsPage: DialogsPageType
-    addMessage: () => void
-    onchangeTextAreaMessage: (newText: string) => void
-}
 
-const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage,onchangeTextAreaMessage, ...props}) => {
+const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage, onchangeTextAreaMessage, ...props}) => {
 
     let dialogsElements = dialogsPage.dialogs.map(dialog => <DialogItem key={dialog.id} {...dialog}/>)
     let messagesElements = dialogsPage.messages.map(mes => <Message key={mes.id} {...mes}/>)

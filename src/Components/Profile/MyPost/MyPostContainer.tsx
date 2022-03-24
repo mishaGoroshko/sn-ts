@@ -1,27 +1,33 @@
 import React from 'react';
-import {addPostAC, onchangeTextareaHandlerAC} from "../../../Redux/profile-reducer";
-import {ProfilePageType} from "../../../Redux/store";
-import {StoreContext} from '../../../StoreContext';
-import MyPost from "./MyPost";
+import {connect} from 'react-redux';
+import {addPostAC, initialStateProfileType, onchangeTextareaHandlerAC} from '../../../Redux/profile-reducer';
+import MyPost from './MyPost';
+import {AppStateType} from '../../../Redux/redux-store';
+import {Dispatch} from 'redux';
 
-type MyPostContainerType = {}
 
-export const MyPostContainer: React.FC<MyPostContainerType> = ({...props}) => {
-
-    return (
-        <StoreContext.Consumer>
-            {(store) => {
-                const profilePage: ProfilePageType = store.getState().profilePage
-                let addPost = () => {
-                    store.dispatch(addPostAC(profilePage.messageForNewPost))
-                }
-
-                const onchangeTextarea = (newText: string) => {
-                    store.dispatch(onchangeTextareaHandlerAC(newText))
-                }
-
-                return <MyPost addPost={addPost} profilePage={profilePage} onchangeTextarea={onchangeTextarea}/>
-            }}
-        </StoreContext.Consumer>
-    )
+type MapStatePropsType = {
+    profilePage: initialStateProfileType
 }
+
+type MapDispatchPropsType = {
+    onchangeTextarea: (newText: string) => void
+    addPost: () => void
+}
+
+export type MyPostType = MapStatePropsType & MapDispatchPropsType
+
+const mapStateToProps = (state: AppStateType): MapStatePropsType => {
+    return {
+        profilePage: state.profilePage
+    }
+}
+
+const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
+    return {
+        onchangeTextarea: (newText: string) => dispatch(onchangeTextareaHandlerAC(newText)),
+        addPost: () => dispatch(addPostAC())
+    }
+}
+
+export const MyPostContainer = connect(mapStateToProps, mapDispatchToProps)(MyPost)

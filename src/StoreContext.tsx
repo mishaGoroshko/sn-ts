@@ -1,10 +1,9 @@
 import React from 'react';
-import {StoreType} from "./Redux/store";
 
-export const StoreContext = React.createContext({} as StoreType)
+export const StoreContext = React.createContext({})
 
 type ProviderType = {
-    store: StoreType
+    store: any
 }
 
 export const Provider: React.FC<ProviderType> = ({store, children}) => {

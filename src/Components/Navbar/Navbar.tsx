@@ -1,15 +1,11 @@
 import React from 'react';
 import s from './Navbar.module.css'
-import {Link, NavLink} from "react-router-dom";
-import {friendType} from "../../Redux/store";
-import {Friends} from "../Friends/Friends";
-import {futimes} from "fs";
+import {NavLink} from 'react-router-dom';
 
 type NavbarType = {
-    friends: Array<friendType>
 }
 
-const Navbar: React.FC<NavbarType> = ({friends}) => {
+const Navbar: React.FC<NavbarType> = ({...props}) => {
     return (
         <nav className={s.nav}>
             <div>
@@ -43,7 +39,6 @@ const Navbar: React.FC<NavbarType> = ({friends}) => {
                     FRIENDS
                 </NavLink>
             </div>
-            <Friends friends={friends}/>
 
         </nav>
     );

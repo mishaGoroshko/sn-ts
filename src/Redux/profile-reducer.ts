@@ -1,43 +1,48 @@
-import {ActionsTypes, ProfilePageType} from "./store";
+import {ActionsTypes} from './store';
+import {v1} from 'uuid';
 
-let initialState: ProfilePageType = {
-    messageForNewPost: 'XY',
-    posts: [
-        {id: 1, message: 'Hi my first message ', likeCounting: 12},
-        {id: 2, message: 'Hello it\'s me ', likeCounting: 23},
-    ]
+type PostType = {
+    id: string
+    message: string
+    likeCounting: number
 }
 
-export const profileReducer = (state: ProfilePageType = initialState, action: ActionsTypes): ProfilePageType => {
+let initialState = {
+    messageForNewPost: 'XY',
+    posts: [
+        {id: v1(), message: 'Hi my first message ', likeCounting: 12},
+        {id: v1(), message: 'Hello it\'s me ', likeCounting: 23},
+    ] as Array<PostType>
+}
+
+export type initialStateProfileType = typeof initialState
+
+export const profileReducer = (state: initialStateProfileType = initialState, action: ActionsTypes): initialStateProfileType => {
     switch (action.type) {
         case 'ADD-POST':
-            if (action.postText.trim()) {
-                state.messageForNewPost = ''
+            if (state.messageForNewPost.trim()) {
                 return {
-                    ...state,
-                    posts: [...state.posts, {id: new Date().getTime(), message: action.postText, likeCounting: 0}]
+                    ...state, messageForNewPost: '',
+                    posts: [...state.posts, {id: v1(), message: state.messageForNewPost.trim(), likeCounting: 0}]
                 }
-            } else {
-                return state
-            }
+            } else return {...state, messageForNewPost: ''}
         case 'ONCHANGE-TEXT-AREA':
-            state.messageForNewPost = action.newText
-            return state;
+            return {...state, messageForNewPost: action.newText};
         default:
             return state
     }
 }
 
-export const addPostAC = (postText: string) => {
+
+export const addPostAC = () => {
     return {
-        type: "ADD-POST",
-        postText: postText
+        type: 'ADD-POST'
     } as const
 }
 
 export const onchangeTextareaHandlerAC = (newText: string) => {
     return {
-        type: "ONCHANGE-TEXT-AREA",
+        type: 'ONCHANGE-TEXT-AREA',
         newText: newText
     } as const
 }

@@ -1,25 +1,34 @@
-import {ActionsTypes, SidebarType} from "./store";
+import {ActionsTypes} from './store';
+import {v1} from 'uuid';
 
-let initialState : SidebarType= {
+type FriendType = {
+    id: string
+    name: string
+    image: string
+}
+
+let initialState = {
     friends: [
         {
-            id: 1,
+            id: v1(),
             name: 'Miha',
             image: 'https://www.internet-technologies.ru/wp-content/uploads/2020/02/49817-307143.png'
         },
         {
-            id: 2,
+            id: v1(),
             name: 'Alinka',
             image: 'https://w7.pngwing.com/pngs/458/502/png-transparent-emoji-broken-heart-paw-patrol-love-heart-smiley.png'
         },
         {
-            id: 3,
+            id: v1(),
             name: 'Polina',
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHKBtROJ2Tc0e9-aQ5BlDFo98XliTit9wXjQ&usqp=CAU'
         },
-    ]
+    ] as Array<FriendType>
 }
 
-export const sidebarReducer = (state: SidebarType = initialState, action: ActionsTypes) => {
+export type InitialStateSidebarType = typeof initialState
+
+export const sidebarReducer = (state: InitialStateSidebarType = initialState, action: ActionsTypes): InitialStateSidebarType => {
     return state
 }

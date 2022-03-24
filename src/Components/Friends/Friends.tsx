@@ -1,15 +1,12 @@
 import React from 'react';
 import s from './Friends.module.css'
-import {friendType} from "../../Redux/store";
+import { FriendsType } from './FriendsContainer';
 
-type FriendsType = {
-    friends: Array<friendType>
-}
 
-export const Friends:React.FC<FriendsType> = ({friends}) => {
+export const Friends:React.FC<FriendsType> = ({sidebar}) => {
     return (
         <div>
-            {friends.map(friend => {
+            {sidebar.friends.map(friend => {
                 return (
                     <div key={friend.id} className={s.friends}>
                         <img className={s.image} src={friend.image} alt=""/>
