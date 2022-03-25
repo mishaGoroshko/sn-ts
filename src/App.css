@@ -16,7 +16,7 @@
 .app-wrapper-content {
     grid-area: c; /*псевдоним*/
 
-    background-color: #b9b9ff;
+    background-color: rgba(0, 0, 0, 0.22);
     margin: 1px;
     border-radius: 10px;
 }

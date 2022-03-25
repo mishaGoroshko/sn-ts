@@ -1,6 +1,6 @@
 .header {
     grid-area: h; /*псевдоним*/
-    background-color: #bada96;
+    background-color: rgba(63, 96, 23, 0.85);
     margin: 1px;
     border-radius: 10px;
 }

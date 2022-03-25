@@ -1,6 +1,6 @@
 .nav {
     grid-area: n; /*псевдоним*/
-    background-color: #dea694;
+    background-color: #a48c8c;
     padding: 10px;
     margin: 1px;
     border-radius: 10px;
@@ -16,7 +16,7 @@
     text-decoration: none;
 }
 
-.settings{
+.marginSettings{
     margin-top: 10px;
     margin-bottom: 10px;
 }

@@ -29,7 +29,12 @@ const Navbar: React.FC<NavbarType> = ({...props}) => {
                     Music
                 </NavLink>
             </div>
-            <div className={s.settings}>
+            <div className={s.marginSettings}>
+                <NavLink to={'/users'} className={navClick => navClick.isActive ? s.active : s.item}>
+                    Find users
+                </NavLink>
+            </div>
+            <div className={s.marginSettings}>
                 <NavLink to={'/Settings'} className={navClick => navClick.isActive ? s.active : s.item}>
                     Settings
                 </NavLink>
