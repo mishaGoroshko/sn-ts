@@ -1,7 +1,7 @@
 import React from 'react';
-import {UsersType} from './UsersContainer';
 import s from './Users.module.css'
 import {v1} from 'uuid';
+import {UsersType} from './UsersContainer';
 
 export const Users: React.FC<UsersType> = ({users, follow, unfollow, setUsers, ...props}) => {
     users.length === 0 && setUsers([
