@@ -1,7 +1,7 @@
 .header {
+    width: 100vw;
     display: flex;
     flex-direction: column;
-
 }
 
 .block {
@@ -27,7 +27,8 @@
     height: 80px;
     border-radius: 40px;
 }
-.button{
+
+.button {
 }
 
 .allInfo {
@@ -44,17 +45,18 @@
     justify-content: space-between;
 }
 
-.nameStatus{
+.nameStatus {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
-.location{
+
+.location {
     display: flex;
     flex-direction: column;
 }
 
-.item{
+.item {
     color: white;
     text-decoration: none;
 }

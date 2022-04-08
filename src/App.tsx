@@ -9,7 +9,7 @@ import Music from './Components/Music/Music';
 import Settings from './Components/Settings/Settings';
 import {DialogsContainer} from './Components/Dialogs/DialogsContainer';
 import {FriendsContainer} from './Components/Friends/FriendsContainer';
-import {UsersContainer} from './Components/Users/UsersContainer';
+import {UsersConnect} from './Components/Users/UsersContainer';
 
 type AppType = {}
 
@@ -24,7 +24,7 @@ const App: React.FC<AppType> = ({...props}) => {
                     <Route path="/dialogs/*" element={<DialogsContainer/>}/>
                     <Route path="/news/*" element={<News/>}/>
                     <Route path="/music/*" element={<Music/>}/>
-                    <Route path="/users/*" element={<UsersContainer/>}/>
+                    <Route path="/users/*" element={<UsersConnect/>}/>
                     <Route path="/settings/*" element={<Settings/>}/>
                     <Route path="/friends/*" element={<FriendsContainer/>}/>
                 </Routes>
