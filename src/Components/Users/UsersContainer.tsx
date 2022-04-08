@@ -2,9 +2,19 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
 import {Dispatch} from 'redux';
-import {followAC, setCurrentPageAC, setTotalCountAC, setUsersAC, unfollowAC, UserType} from '../../Redux/users-reducer';
+import {
+    followAC,
+    setCurrentPageAC,
+    setTotalCountAC,
+    setUsersAC,
+    startPreloaderAC,
+    unfollowAC,
+    UserType
+} from '../../Redux/users-reducer';
 import axios from 'axios';
 import {Users} from './Users';
+import preloader from '../../Assets/images/preloader.gif'
+import {Preloader} from '../common/Preloader/Preloader';
 
 
 class UsersContainer extends React.Component<UsersType> {
@@ -12,8 +22,10 @@ class UsersContainer extends React.Component<UsersType> {
     //     super(props);
     // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
     componentDidMount() {
+        this.props.startPreloader(true)
         axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
             .then(response => {
+                this.props.startPreloader(false)
                 this.props.setUsers(response.data.items)
                 this.props.setTotalCount(response.data.totalCount)
             })
@@ -21,22 +33,30 @@ class UsersContainer extends React.Component<UsersType> {
 
     onPageChanged = (pageNumber: number) => {
         this.props.setCurrentPage(pageNumber)
+        this.props.startPreloader(true)
         axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`)
-            .then(response => this.props.setUsers(response.data.items))
+            .then(response => {
+                this.props.startPreloader(false)
+                this.props.setUsers(response.data.items)
+            })
     }
 
 
     render() {
-        let {users, follow, unfollow, pageSize, totalCountUsers, currentPage,} = this.props;
+        let {users, follow, unfollow, pageSize, totalCountUsers, currentPage, isFetching} = this.props;
 
-        return <Users users={users}
-                      follow={follow}
-                      unfollow={unfollow}
-                      currentPage={currentPage}
-                      pageSize={pageSize}
-                      totalCountUsers={totalCountUsers}
-                      onPageChanged={this.onPageChanged}
-        />;
+        return (
+            <>
+                <Preloader isFetching={isFetching}/>
+                <Users users={users}
+                       follow={follow}
+                       unfollow={unfollow}
+                       currentPage={currentPage}
+                       pageSize={pageSize}
+                       totalCountUsers={totalCountUsers}
+                       onPageChanged={this.onPageChanged}
+                />
+            </>)
     }
 }
 
@@ -46,6 +66,7 @@ type MapStatePropsType = {
     pageSize: number
     totalCountUsers: number
     currentPage: number
+    isFetching: boolean
 }
 type MapDispatchPropsType = {
     follow: (userId: string) => void
@@ -53,6 +74,7 @@ type MapDispatchPropsType = {
     setUsers: (users: Array<UserType>) => void
     setCurrentPage: (currentPage: number) => void
     setTotalCount: (totalCount: number) => void
+    startPreloader: (isFetching: boolean) => void
 }
 
 export type UsersType = MapStatePropsType & MapDispatchPropsType
@@ -62,7 +84,8 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
         users: state.usersPage.users,
         pageSize: state.usersPage.pageSize,
         totalCountUsers: state.usersPage.totalCountUsers,
-        currentPage: state.usersPage.currentPage
+        currentPage: state.usersPage.currentPage,
+        isFetching: state.usersPage.isFetching,
     }
 }
 
@@ -72,8 +95,8 @@ const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
         unfollow: (userId) => dispatch(unfollowAC(userId)),
         setUsers: (users) => dispatch(setUsersAC(users)),
         setCurrentPage: (currentPage) => dispatch(setCurrentPageAC(currentPage)),
-        setTotalCount: (totalCount) => dispatch(setTotalCountAC(totalCount))
-
+        setTotalCount: (totalCount) => dispatch(setTotalCountAC(totalCount)),
+        startPreloader: (isFetching) => dispatch(startPreloaderAC(isFetching))
     }
 }
 

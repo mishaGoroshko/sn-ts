@@ -17,7 +17,8 @@ let initialState = {
     users: [] as UserType[],
     pageSize: 10,
     totalCountUsers: 0,
-    currentPage: 1
+    currentPage: 1,
+    isFetching: false,
 }
 
 export type InitialStateUsersType = typeof initialState
@@ -40,6 +41,8 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
             return {...state, currentPage: action.payload.currentPage}
         case 'SET-TOTAL-COUNT':
             return {...state, totalCountUsers: action.payload.totalCount}
+        case 'START-PRELOADER':
+            return {...state, isFetching: action.payload.isFetching}
         default:
             return state
     }
@@ -50,11 +53,13 @@ type unfollowACType = ReturnType<typeof unfollowAC>
 type setUsersACType = ReturnType<typeof setUsersAC>
 type setCurrentPageACACType = ReturnType<typeof setCurrentPageAC>
 type setTotalCountACType = ReturnType<typeof setTotalCountAC>
+type startPreloaderACType = ReturnType<typeof startPreloaderAC>
 type ACTypes = followACType
     | unfollowACType
     | setUsersACType
     | setCurrentPageACACType
     | setTotalCountACType
+    | startPreloaderACType
 
 export const followAC = (userId: string) => {
     return {
@@ -86,5 +91,11 @@ export const setTotalCountAC = (totalCount: number) => {
     return {
         type: 'SET-TOTAL-COUNT',
         payload: {totalCount}
+    } as const
+}
+export const startPreloaderAC = (isFetching: boolean) => {
+    return {
+        type: 'START-PRELOADER',
+        payload: {isFetching}
     } as const
 }
