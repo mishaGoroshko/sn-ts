@@ -7,30 +7,40 @@ import userPhoto from '../../Assets/images/userPhoto.png'
 export class Users extends React.Component<UsersType> {
     // constructor(props: UsersType) {
     //     super(props);
-    // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios)
+    // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
     componentDidMount() {
-        alert('componentDidMount')
-        axios.get('https://social-network.samuraijs.com/api/1.0/users')
+        axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
+            .then(response => {
+                this.props.setUsers(response.data.items)
+                this.props.setTotalCount(response.data.totalCount)
+            })
+    }
+
+    onPageChanged = (pageNumber: number) => {
+        this.props.setCurrentPage(pageNumber)
+        axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`)
             .then(response => this.props.setUsers(response.data.items))
     }
 
-    componentWillMount() {
-        alert('componentWillMount')
-    }
-
-    componentWillUnmount() {
-        alert('componentWillUnmount')
-    }
-
-    componentDidUpdate() {
-        alert('componentDidUpdate')
-    }
 
     render() {
-        let {users, follow, unfollow, setUsers} = this.props;
+        let {users, follow, unfollow, setUsers, pageSize, totalCountUsers, currentPage, setCurrentPage} = this.props;
 
+        let totalPages = Math.ceil(totalCountUsers / pageSize)
+
+        let pages = [...Array(totalPages)].map((_, i) => i + 1)
+        // let pages = []
+        // for (let i = 1; i <= totalPages; i++)
+        //     pages.push(i)
         return (
             <div className={s.header}>
+                <div>
+                    {pages.map((p, i) => {
+                        return <span key={i}
+                                     className={p === currentPage ? s.active : s.item}
+                                     onClick={() => this.onPageChanged(p)}>{p}</span>
+                    })}
+                </div>
                 {users.map(u => {
                     return (
                         <div key={u.id} className={s.block}>
