@@ -40,7 +40,7 @@
     /*flex-basis: 30%;*/
     /*flex-grow: 5;*/
     /*flex-shrink: 1;*/
-    flex: 0 1 32%;
+    flex: 0 1 40%;
     display: flex;
     justify-content: space-between;
 }

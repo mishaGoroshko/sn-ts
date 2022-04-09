@@ -1,19 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
-import {Dispatch} from 'redux';
 import {
-    followAC,
-    setCurrentPageAC,
-    setTotalCountAC,
-    setUsersAC,
-    startPreloaderAC,
-    unfollowAC,
+    follow,
+    setCurrentPage,
+    setPreloader,
+    setTotalCount,
+    setUsers,
+    unfollow,
     UserType
 } from '../../Redux/users-reducer';
 import axios from 'axios';
 import {Users} from './Users';
-import preloader from '../../Assets/images/preloader.gif'
 import {Preloader} from '../common/Preloader/Preloader';
 
 
@@ -22,10 +20,10 @@ class UsersContainer extends React.Component<UsersType> {
     //     super(props);
     // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
     componentDidMount() {
-        this.props.startPreloader(true)
+        this.props.setPreloader(true)
         axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
             .then(response => {
-                this.props.startPreloader(false)
+                this.props.setPreloader(false)
                 this.props.setUsers(response.data.items)
                 this.props.setTotalCount(response.data.totalCount)
             })
@@ -33,10 +31,10 @@ class UsersContainer extends React.Component<UsersType> {
 
     onPageChanged = (pageNumber: number) => {
         this.props.setCurrentPage(pageNumber)
-        this.props.startPreloader(true)
+        this.props.setPreloader(true)
         axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`)
             .then(response => {
-                this.props.startPreloader(false)
+                this.props.setPreloader(false)
                 this.props.setUsers(response.data.items)
             })
     }
@@ -74,7 +72,7 @@ type MapDispatchPropsType = {
     setUsers: (users: Array<UserType>) => void
     setCurrentPage: (currentPage: number) => void
     setTotalCount: (totalCount: number) => void
-    startPreloader: (isFetching: boolean) => void
+    setPreloader: (isFetching: boolean) => void
 }
 
 export type UsersType = MapStatePropsType & MapDispatchPropsType
@@ -89,16 +87,18 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
-    return {
-        follow: (userId) => dispatch(followAC(userId)),
-        unfollow: (userId) => dispatch(unfollowAC(userId)),
-        setUsers: (users) => dispatch(setUsersAC(users)),
-        setCurrentPage: (currentPage) => dispatch(setCurrentPageAC(currentPage)),
-        setTotalCount: (totalCount) => dispatch(setTotalCountAC(totalCount)),
-        startPreloader: (isFetching) => dispatch(startPreloaderAC(isFetching))
-    }
-}
+// const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
+//     return {
+//         follow: (userId) => dispatch(followAC(userId)),
+//         unfollow: (userId) => dispatch(unfollowAC(userId)),
+//         setUsers: (users) => dispatch(setUsersAC(users)),
+//         setCurrentPage: (currentPage) => dispatch(setCurrentPageAC(currentPage)),
+//         setTotalCount: (totalCount) => dispatch(setTotalCountAC(totalCount)),
+//         startPreloader: (isFetching) => dispatch(startPreloaderAC(isFetching))
+//     }
+// }
 
-export const UsersConnect = connect(mapStateToProps, mapDispatchToProps)(UsersContainer)
+export const UsersConnect = connect(mapStateToProps, {
+    follow, unfollow, setUsers, setCurrentPage, setTotalCount, setPreloader,
+})(UsersContainer)
 

@@ -41,61 +41,61 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
             return {...state, currentPage: action.payload.currentPage}
         case 'SET-TOTAL-COUNT':
             return {...state, totalCountUsers: action.payload.totalCount}
-        case 'START-PRELOADER':
+        case 'SET-PRELOADER':
             return {...state, isFetching: action.payload.isFetching}
         default:
             return state
     }
 }
 
-type followACType = ReturnType<typeof followAC>
-type unfollowACType = ReturnType<typeof unfollowAC>
-type setUsersACType = ReturnType<typeof setUsersAC>
-type setCurrentPageACACType = ReturnType<typeof setCurrentPageAC>
-type setTotalCountACType = ReturnType<typeof setTotalCountAC>
-type startPreloaderACType = ReturnType<typeof startPreloaderAC>
+type followACType = ReturnType<typeof follow>
+type unfollowACType = ReturnType<typeof unfollow>
+type setUsersACType = ReturnType<typeof setUsers>
+type setCurrentPageACACType = ReturnType<typeof setCurrentPage>
+type setTotalCountACType = ReturnType<typeof setTotalCount>
+type setPreloaderACType = ReturnType<typeof setPreloader>
 type ACTypes = followACType
     | unfollowACType
     | setUsersACType
     | setCurrentPageACACType
     | setTotalCountACType
-    | startPreloaderACType
+    | setPreloaderACType
 
-export const followAC = (userId: string) => {
+export const follow = (userId: string) => {
     return {
         type: 'FOLLOW',
         payload: {userId},
     } as const
 }
-export const unfollowAC = (userId: string) => {
+export const unfollow = (userId: string) => {
     return {
         type: 'UN-FOLLOW',
         payload: {userId},
     } as const
 }
-export const setUsersAC = (users: Array<UserType>) => {
+export const setUsers = (users: Array<UserType>) => {
     return {
         type: 'SET-USERS',
         payload: {users},
     } as const
 }
 
-export const setCurrentPageAC = (currentPage: number) => {
+export const setCurrentPage = (currentPage: number) => {
     return {
         type: 'SET-PAGE-NUMBER',
         payload: {currentPage},
     } as const
 }
 
-export const setTotalCountAC = (totalCount: number) => {
+export const setTotalCount = (totalCount: number) => {
     return {
         type: 'SET-TOTAL-COUNT',
         payload: {totalCount}
     } as const
 }
-export const startPreloaderAC = (isFetching: boolean) => {
+export const setPreloader = (isFetching: boolean) => {
     return {
-        type: 'START-PRELOADER',
+        type: 'SET-PRELOADER',
         payload: {isFetching}
     } as const
 }
