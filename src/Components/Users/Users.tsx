@@ -2,6 +2,7 @@ import React from 'react';
 import s from './Users.module.css';
 import userPhoto from '../../Assets/images/userPhoto.png';
 import {UserType} from '../../Redux/users-reducer';
+import {NavLink} from 'react-router-dom';
 
 type UsersType = {
     totalCountUsers: number
@@ -32,7 +33,7 @@ export const Users: React.FC<UsersType> = ({totalCountUsers, pageSize, currentPa
                 return (
                     <div key={u.id} className={s.block}>
                         <div className={s.blockAva}>
-                            <img src={u.photos.small !== null ? u.photos.small : userPhoto} className={s.image}/>
+                            <NavLink to={`/profile/${u.id}`}><img src={u.photos.small !== null ? u.photos.small : userPhoto} className={s.image}/></NavLink>
                             {u.followed
                                 ? <button onClick={() => follow(u.id)} className={s.button}>unfollow</button>
                                 : <button onClick={() => unfollow(u.id)}>follow</button>}

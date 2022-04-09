@@ -1,7 +1,17 @@
 import React from 'react';
 import s from './ProfileInfo.module.css'
+import {UserProfile} from '../../../Redux/profile-reducer';
+import {Preloader} from '../../common/Preloader/Preloader';
 
-const ProfileInfo = () => {
+
+type ProfileInfoType = {
+    userProfile: UserProfile | null
+}
+
+const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
+    if (!userProfile) {
+        return <Preloader isFetching={true}/>
+    }
     return (
         <div className={s.content}>
             <div>
@@ -10,7 +20,8 @@ const ProfileInfo = () => {
                     width={'300px'} alt=""/>
             </div>
             <div className={s.avaDescription}>
-                ava + description
+                < img src={userProfile.photos.large} alt="ava"/>
+                <div>{userProfile.fullName}</div>
             </div>
         </div>
     );
