@@ -5,7 +5,7 @@ import {Preloader} from '../../common/Preloader/Preloader';
 
 
 type ProfileInfoType = {
-    userProfile: UserProfile | null
+    userProfile: UserProfile
 }
 
 const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
@@ -20,7 +20,7 @@ const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
                     width={'300px'} alt=""/>
             </div>
             <div className={s.avaDescription}>
-                < img src={userProfile.photos.large} alt="ava"/>
+                <img src={userProfile.photos.large} alt="ava"/>
                 <div>{userProfile.fullName}</div>
             </div>
         </div>

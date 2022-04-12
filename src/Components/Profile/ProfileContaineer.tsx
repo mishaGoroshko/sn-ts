@@ -1,16 +1,16 @@
-import React, {JSXElementConstructor} from 'react';
+import React, {ComponentType} from 'react';
 import Profile from './Profile';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
 import {setUserProfile, UserProfile} from '../../Redux/profile-reducer';
-import {useParams} from 'react-router-dom';
+import {NavigateFunction, Params, useLocation, useNavigate, useParams} from 'react-router-dom';
 
 
 class ProfileContainer extends React.Component<ProfileType> {
     componentDidMount() {
         // @ts-ignore
-        let userID:number | null = this.props.params['*'];
+        let userID:number | null = this.props.router.params['*'];
         if (!userID) {
             userID = 2
         }
@@ -43,19 +43,24 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     }
 }
 
-const withRouter = (Component: JSXElementConstructor<any>): JSXElementConstructor<any> => {
-    function ComponentWithRouterProp(props: any) {
-        let params = useParams<'*'>();
+// type WithRouterType = Location & NavigateFunction & Readonly<Params<string>>;
+
+
+function withRouter<T>(Component: ComponentType<T>) {
+    function ComponentWithRouterProp(props: T
+        // & WithRouterType
+    ) {
+        let location = useLocation();
+        let navigate = useNavigate();
+        let params = useParams();
         return (
             <Component
                 {...props}
-                params={params}
+                router={{ location, navigate, params }}
             />
         );
     }
-
     return ComponentWithRouterProp;
 }
-
 
 export const ProfileConnect = connect(mapStateToProps, {setUserProfile})(withRouter(ProfileContainer))
