@@ -31,7 +31,7 @@ const Navbar: React.FC<NavbarType> = ({...props}) => {
             </div>
             <div className={s.marginSettings}>
                 <NavLink to={'/users'} className={navClick => navClick.isActive ? s.active : s.item}>
-                    Find users
+                    Users
                 </NavLink>
             </div>
             <div className={s.marginSettings}>

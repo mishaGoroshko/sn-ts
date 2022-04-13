@@ -1,4 +1,7 @@
 .nav {
+    width: 20vw;
+    min-height: 90vh;
+
     grid-area: n; /*псевдоним*/
     background-color: #a48c8c;
     padding: 10px;

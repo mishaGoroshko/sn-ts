@@ -3,6 +3,8 @@ import s from './Users.module.css';
 import userPhoto from '../../Assets/images/userPhoto.png';
 import {UserType} from '../../Redux/users-reducer';
 import {NavLink} from 'react-router-dom';
+import axios from 'axios';
+import {followIPI} from '../../API/api';
 
 type UsersType = {
     totalCountUsers: number
@@ -12,9 +14,16 @@ type UsersType = {
     users: UserType[]
     follow: (userId: string) => void
     unfollow: (userId: string) => void
+    followArrayId: Array<string>
+    toggleDisabled: (userId: string, isDisabled: boolean) => void
+
 }
 
-export const Users: React.FC<UsersType> = ({totalCountUsers, pageSize, currentPage, onPageChanged, users, follow, unfollow}) => {
+export const Users: React.FC<UsersType> = ({
+                                               totalCountUsers, pageSize, currentPage,
+                                               onPageChanged, users, follow,
+                                               unfollow, followArrayId, toggleDisabled
+                                           }) => {
 
     let totalPages = Math.ceil(totalCountUsers / pageSize)
 
@@ -33,10 +42,24 @@ export const Users: React.FC<UsersType> = ({totalCountUsers, pageSize, currentPa
                 return (
                     <div key={u.id} className={s.block}>
                         <div className={s.blockAva}>
-                            <NavLink to={`/profile/${u.id}`}><img src={u.photos.small !== null ? u.photos.small : userPhoto} className={s.image}/></NavLink>
+                            <NavLink to={`/profile/${u.id}`}><img
+                                src={u.photos.small !== null ? u.photos.small : userPhoto}
+                                className={s.image}/></NavLink>
                             {u.followed
-                                ? <button onClick={() => follow(u.id)} className={s.button}>unfollow</button>
-                                : <button onClick={() => unfollow(u.id)}>follow</button>}
+                                ? <button disabled={followArrayId.some(el => el === u.id)}  onClick={() => {
+                                    toggleDisabled(u.id, true)
+                                    followIPI.deleteFollow(u.id).then(data => {
+                                        toggleDisabled(u.id, false)
+                                        data.resultCode === 0 && unfollow(u.id)
+                                    })
+                                }} className={s.button}>unfollow</button>
+                                : <button disabled={followArrayId.some(el => el === u.id)} onClick={() => {
+                                    toggleDisabled(u.id, true)
+                                    followIPI.postFollow(u.id).then(data => {
+                                        toggleDisabled(u.id, false)
+                                        data.resultCode === 0 && follow(u.id)
+                                    })
+                                }}>follow</button>}
                         </div>
                         <div className={s.allInfo}>
                             <div className={s.nameStatus}>

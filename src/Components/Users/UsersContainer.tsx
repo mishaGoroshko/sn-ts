@@ -6,13 +6,14 @@ import {
     setCurrentPage,
     setPreloader,
     setTotalCount,
-    setUsers,
+    setUsers, toggleDisabled,
     unfollow,
     UserType
 } from '../../Redux/users-reducer';
 import axios from 'axios';
 import {Users} from './Users';
 import {Preloader} from '../common/Preloader/Preloader';
+import {userIPI} from '../../API/api';
 
 
 class UsersContainer extends React.Component<UsersType> {
@@ -21,27 +22,27 @@ class UsersContainer extends React.Component<UsersType> {
     // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
     componentDidMount() {
         this.props.setPreloader(true)
-        axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
-            .then(response => {
+        userIPI.getUsers(this.props.currentPage, this.props.pageSize).then(data => {
                 this.props.setPreloader(false)
-                this.props.setUsers(response.data.items)
-                this.props.setTotalCount(response.data.totalCount)
-            })
+                this.props.setUsers(data.items)
+                this.props.setTotalCount(data.totalCount)
+            }
+        )
     }
 
     onPageChanged = (pageNumber: number) => {
         this.props.setCurrentPage(pageNumber)
         this.props.setPreloader(true)
-        axios.get(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`)
-            .then(response => {
-                this.props.setPreloader(false)
-                this.props.setUsers(response.data.items)
-            })
+
+        userIPI.getUsers(pageNumber, this.props.pageSize).then(data => {
+            this.props.setPreloader(false)
+            this.props.setUsers(data.items)
+        })
     }
 
 
     render() {
-        let {users, follow, unfollow, pageSize, totalCountUsers, currentPage, isFetching} = this.props;
+        let {users, follow, unfollow, pageSize, totalCountUsers, currentPage, isFetching, followArrayId, toggleDisabled} = this.props;
 
         return (
             <>
@@ -53,11 +54,12 @@ class UsersContainer extends React.Component<UsersType> {
                        pageSize={pageSize}
                        totalCountUsers={totalCountUsers}
                        onPageChanged={this.onPageChanged}
+                       followArrayId={followArrayId}
+                       toggleDisabled={toggleDisabled}
                 />
             </>)
     }
 }
-
 
 type MapStatePropsType = {
     users: Array<UserType>
@@ -65,6 +67,7 @@ type MapStatePropsType = {
     totalCountUsers: number
     currentPage: number
     isFetching: boolean
+    followArrayId: Array<string>
 }
 type MapDispatchPropsType = {
     follow: (userId: string) => void
@@ -73,6 +76,7 @@ type MapDispatchPropsType = {
     setCurrentPage: (currentPage: number) => void
     setTotalCount: (totalCount: number) => void
     setPreloader: (isFetching: boolean) => void
+    toggleDisabled: (userId: string, isDisabled: boolean) => void
 }
 
 export type UsersType = MapStatePropsType & MapDispatchPropsType
@@ -84,6 +88,7 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
         totalCountUsers: state.usersPage.totalCountUsers,
         currentPage: state.usersPage.currentPage,
         isFetching: state.usersPage.isFetching,
+        followArrayId: state.usersPage.followArrayId,
     }
 }
 
@@ -99,6 +104,6 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
 // }
 
 export const UsersConnect = connect(mapStateToProps, {
-    follow, unfollow, setUsers, setCurrentPage, setTotalCount, setPreloader,
+    follow, unfollow, setUsers, setCurrentPage, setTotalCount, setPreloader, toggleDisabled
 })(UsersContainer)
 

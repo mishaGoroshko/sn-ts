@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import Header from './Components/Header/Header';
 import Navbar from './Components/Navbar/Navbar';
 import {Route, Routes} from 'react-router-dom';
 import News from './Components/News/News';
@@ -10,13 +9,14 @@ import {DialogsContainer} from './Components/Dialogs/DialogsContainer';
 import {FriendsContainer} from './Components/Friends/FriendsContainer';
 import {UsersConnect} from './Components/Users/UsersContainer';
 import {ProfileConnect} from './Components/Profile/ProfileContaineer';
+import {HeaderConnect} from './Components/Header/HeaderContainer';
 
 type AppType = {}
 
 const App: React.FC<AppType> = ({...props}) => {
     return (
         <div className="app-wrapper">
-            <Header/>
+            <HeaderConnect/>
             <Navbar/>
             <div className={'app-wrapper-content'}>
                 <Routes>

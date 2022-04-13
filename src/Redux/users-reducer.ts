@@ -19,6 +19,7 @@ let initialState = {
     totalCountUsers: 0,
     currentPage: 1,
     isFetching: false,
+    followArrayId: [] as Array<string>
 }
 
 export type InitialStateUsersType = typeof initialState
@@ -28,12 +29,12 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
         case 'FOLLOW':
             return {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: false} : el)
+                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: true} : el)
             }
         case 'UN-FOLLOW':
             return {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: true} : el)
+                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: false} : el)
             }
         case 'SET-USERS':
             return {...state, users: [...action.payload.users]}
@@ -43,6 +44,12 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
             return {...state, totalCountUsers: action.payload.totalCount}
         case 'SET-PRELOADER':
             return {...state, isFetching: action.payload.isFetching}
+        case 'TOGGLE-DISABLED':
+            return {
+                ...state, followArrayId: action.payload.isDisabled
+                    ? [...state.followArrayId, action.payload.userId]
+                    : state.followArrayId.filter(el => el !== action.payload.userId)
+            }
         default:
             return state
     }
@@ -54,12 +61,14 @@ type setUsersACType = ReturnType<typeof setUsers>
 type setCurrentPageACACType = ReturnType<typeof setCurrentPage>
 type setTotalCountACType = ReturnType<typeof setTotalCount>
 type setPreloaderACType = ReturnType<typeof setPreloader>
+type toggleDisabledACType = ReturnType<typeof toggleDisabled>
 type ACTypes = followACType
     | unfollowACType
     | setUsersACType
     | setCurrentPageACACType
     | setTotalCountACType
     | setPreloaderACType
+    | toggleDisabledACType
 
 export const follow = (userId: string) => {
     return {
@@ -97,5 +106,11 @@ export const setPreloader = (isFetching: boolean) => {
     return {
         type: 'SET-PRELOADER',
         payload: {isFetching}
+    } as const
+}
+export const toggleDisabled = (userId: string, isDisabled: boolean) => {
+    return {
+        type: 'TOGGLE-DISABLED',
+        payload: {userId, isDisabled}
     } as const
 }

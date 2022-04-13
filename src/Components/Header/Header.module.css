@@ -1,10 +1,25 @@
 .header {
+    width: 100vw;
     grid-area: h; /*псевдоним*/
     background-color: rgba(63, 96, 23, 0.85);
     margin: 1px;
     border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .header img {
-    width: 50px
+    min-height: 50px;
+}
+
+.login {
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.login a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
 }
