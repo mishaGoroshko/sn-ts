@@ -2,13 +2,12 @@ import React from 'react';
 import Header from './Header';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
-import axios from 'axios';
 import {setUserData} from '../../Redux/auth-reducer';
-import {authIPS} from '../../API/api';
+import {authAPI} from '../../API/api';
 
 export class HeaderContainer extends React.Component<HeaderType> {
     componentDidMount() {
-        authIPS.getAuth()
+        authAPI.getAuth()
             .then(data => {
                 if (data.resultCode === 0) {
                     let {id, email, login} = data.data

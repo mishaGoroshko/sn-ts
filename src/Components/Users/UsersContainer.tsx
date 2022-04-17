@@ -6,14 +6,14 @@ import {
     setCurrentPage,
     setPreloader,
     setTotalCount,
-    setUsers, toggleDisabled,
+    setUsers,
+    toggleDisabled,
     unfollow,
     UserType
 } from '../../Redux/users-reducer';
-import axios from 'axios';
 import {Users} from './Users';
 import {Preloader} from '../common/Preloader/Preloader';
-import {userIPI} from '../../API/api';
+import {userAPI} from '../../API/api';
 
 
 class UsersContainer extends React.Component<UsersType> {
@@ -22,7 +22,7 @@ class UsersContainer extends React.Component<UsersType> {
     // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
     componentDidMount() {
         this.props.setPreloader(true)
-        userIPI.getUsers(this.props.currentPage, this.props.pageSize).then(data => {
+        userAPI.getUsers(this.props.currentPage, this.props.pageSize).then(data => {
                 this.props.setPreloader(false)
                 this.props.setUsers(data.items)
                 this.props.setTotalCount(data.totalCount)
@@ -34,7 +34,7 @@ class UsersContainer extends React.Component<UsersType> {
         this.props.setCurrentPage(pageNumber)
         this.props.setPreloader(true)
 
-        userIPI.getUsers(pageNumber, this.props.pageSize).then(data => {
+        userAPI.getUsers(pageNumber, this.props.pageSize).then(data => {
             this.props.setPreloader(false)
             this.props.setUsers(data.items)
         })

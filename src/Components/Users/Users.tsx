@@ -3,8 +3,7 @@ import s from './Users.module.css';
 import userPhoto from '../../Assets/images/userPhoto.png';
 import {UserType} from '../../Redux/users-reducer';
 import {NavLink} from 'react-router-dom';
-import axios from 'axios';
-import {followIPI} from '../../API/api';
+import {followAPI} from '../../API/api';
 
 type UsersType = {
     totalCountUsers: number
@@ -48,14 +47,14 @@ export const Users: React.FC<UsersType> = ({
                             {u.followed
                                 ? <button disabled={followArrayId.some(el => el === u.id)}  onClick={() => {
                                     toggleDisabled(u.id, true)
-                                    followIPI.deleteFollow(u.id).then(data => {
+                                    followAPI.deleteFollow(u.id).then(data => {
                                         toggleDisabled(u.id, false)
                                         data.resultCode === 0 && unfollow(u.id)
                                     })
                                 }} className={s.button}>unfollow</button>
                                 : <button disabled={followArrayId.some(el => el === u.id)} onClick={() => {
                                     toggleDisabled(u.id, true)
-                                    followIPI.postFollow(u.id).then(data => {
+                                    followAPI.postFollow(u.id).then(data => {
                                         toggleDisabled(u.id, false)
                                         data.resultCode === 0 && follow(u.id)
                                     })
