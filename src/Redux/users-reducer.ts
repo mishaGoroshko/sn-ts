@@ -1,4 +1,6 @@
 import {v1} from 'uuid';
+import {userAPI} from '../API/api';
+import {Dispatch} from 'redux';
 
 export type UserType = {
     name: string
@@ -70,47 +72,44 @@ type ACTypes = followACType
     | setPreloaderACType
     | toggleDisabledACType
 
-export const follow = (userId: string) => {
-    return {
-        type: 'FOLLOW',
-        payload: {userId},
-    } as const
-}
-export const unfollow = (userId: string) => {
-    return {
-        type: 'UN-FOLLOW',
-        payload: {userId},
-    } as const
-}
-export const setUsers = (users: Array<UserType>) => {
-    return {
-        type: 'SET-USERS',
-        payload: {users},
-    } as const
+export const follow = (userId: string) => ({type: 'FOLLOW', payload: {userId},} as const)
+export const unfollow = (userId: string) => ({type: 'UN-FOLLOW', payload: {userId},} as const)
+export const setUsers = (users: Array<UserType>) => ({type: 'SET-USERS', payload: {users},} as const)
+export const setCurrentPage = (currentPage: number) => ({type: 'SET-PAGE-NUMBER', payload: {currentPage},} as const)
+export const setTotalCount = (totalCount: number) => ({type: 'SET-TOTAL-COUNT', payload: {totalCount},} as const)
+export const setPreloader = (isFetching: boolean) => ({type: 'SET-PRELOADER', payload: {isFetching},} as const)
+export const toggleDisabled = (userId: string, isDisabled: boolean) =>
+    ({type: 'TOGGLE-DISABLED', payload: {userId, isDisabled}} as const)
+
+export const getUsersTC = (currentPage: number, pageSize: number) => (dispatch: Dispatch) => {
+    dispatch(setPreloader(true))
+    userAPI
+        .getUsers(currentPage, pageSize)
+        .then(data => {
+                dispatch(setPreloader(false))
+                dispatch(setUsers(data.items))
+                dispatch(setTotalCount(data.totalCount))
+                dispatch(setCurrentPage(currentPage))
+            }
+        )
 }
 
-export const setCurrentPage = (currentPage: number) => {
-    return {
-        type: 'SET-PAGE-NUMBER',
-        payload: {currentPage},
-    } as const
+export const postFollowTC = (userId: string) => (dispatch: Dispatch) => {
+    dispatch(toggleDisabled(userId, true))
+    userAPI
+        .postFollow(userId)
+        .then(data => {
+            dispatch(toggleDisabled(userId, false))
+            data.resultCode === 0 && dispatch(follow(userId))
+        })
 }
 
-export const setTotalCount = (totalCount: number) => {
-    return {
-        type: 'SET-TOTAL-COUNT',
-        payload: {totalCount}
-    } as const
-}
-export const setPreloader = (isFetching: boolean) => {
-    return {
-        type: 'SET-PRELOADER',
-        payload: {isFetching}
-    } as const
-}
-export const toggleDisabled = (userId: string, isDisabled: boolean) => {
-    return {
-        type: 'TOGGLE-DISABLED',
-        payload: {userId, isDisabled}
-    } as const
+export const deleteFollowTC = (userId: string) => (dispatch: Dispatch) => {
+    dispatch(toggleDisabled(userId, true))
+    userAPI
+        .deleteFollow(userId)
+        .then(data => {
+            dispatch(toggleDisabled(userId, false))
+            data.resultCode === 0 && dispatch(unfollow(userId))
+        })
 }

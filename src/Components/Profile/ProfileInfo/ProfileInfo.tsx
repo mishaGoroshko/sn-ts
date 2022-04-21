@@ -2,6 +2,7 @@ import React from 'react';
 import s from './ProfileInfo.module.css'
 import {UserProfile} from '../../../Redux/profile-reducer';
 import {Preloader} from '../../common/Preloader/Preloader';
+import userPhoto from '../../../Assets/images/userPhoto.png';
 
 
 type ProfileInfoType = {
@@ -20,7 +21,7 @@ const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
                     width={'300px'} alt=""/>
             </div>
             <div className={s.avaDescription}>
-                <img src={userProfile.photos.large} alt="ava"/>
+                <img src={userProfile.photos.large !== null ? userProfile.photos.large : userPhoto} alt="ava"/>
                 <div>{userProfile.fullName}</div>
             </div>
         </div>

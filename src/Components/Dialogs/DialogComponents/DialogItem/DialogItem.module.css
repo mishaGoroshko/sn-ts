@@ -1,13 +1,17 @@
-.dialogItem {
+.dialogBlock {
     padding: 10px;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+
+.dialogPassive {
     color: white;
 }
 
 .dialogActive {
-    padding: 10px;
-    text-decoration: none;
-    color: gold;
+    color: #ffd500;
 }
 
 .image{
@@ -16,4 +20,6 @@
     border-radius: 15px;
 }
 
-
+.name {
+    margin-left: 3px;
+}

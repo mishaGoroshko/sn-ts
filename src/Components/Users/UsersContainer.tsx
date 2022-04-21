@@ -2,18 +2,17 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
 import {
+    deleteFollowTC,
     follow,
-    setCurrentPage,
-    setPreloader,
-    setTotalCount,
-    setUsers,
+    getUsersTC,
+    postFollowTC,
     toggleDisabled,
     unfollow,
     UserType
 } from '../../Redux/users-reducer';
 import {Users} from './Users';
 import {Preloader} from '../common/Preloader/Preloader';
-import {userAPI} from '../../API/api';
+import {Navigate} from 'react-router-dom';
 
 
 class UsersContainer extends React.Component<UsersType> {
@@ -21,41 +20,31 @@ class UsersContainer extends React.Component<UsersType> {
     //     super(props);
     // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
     componentDidMount() {
-        this.props.setPreloader(true)
-        userAPI.getUsers(this.props.currentPage, this.props.pageSize).then(data => {
-                this.props.setPreloader(false)
-                this.props.setUsers(data.items)
-                this.props.setTotalCount(data.totalCount)
-            }
-        )
+        this.props.getUsersTC(this.props.currentPage, this.props.pageSize)
     }
 
-    onPageChanged = (pageNumber: number) => {
-        this.props.setCurrentPage(pageNumber)
-        this.props.setPreloader(true)
-
-        userAPI.getUsers(pageNumber, this.props.pageSize).then(data => {
-            this.props.setPreloader(false)
-            this.props.setUsers(data.items)
-        })
-    }
-
+    onPageChanged = (pageNumber: number) =>
+        this.props.getUsersTC(pageNumber, this.props.pageSize)
 
     render() {
-        let {users, follow, unfollow, pageSize, totalCountUsers, currentPage, isFetching, followArrayId, toggleDisabled} = this.props;
+        let {
+            users, pageSize, totalCountUsers, currentPage, isFetching, followArrayId, isAuth,
+            postFollowTC, deleteFollowTC
+        } = this.props;
+
+        if (!isAuth) return <Navigate to="/login"/>
 
         return (
             <>
                 <Preloader isFetching={isFetching}/>
                 <Users users={users}
-                       follow={follow}
-                       unfollow={unfollow}
                        currentPage={currentPage}
                        pageSize={pageSize}
                        totalCountUsers={totalCountUsers}
                        onPageChanged={this.onPageChanged}
                        followArrayId={followArrayId}
-                       toggleDisabled={toggleDisabled}
+                       postFollowTC={postFollowTC}
+                       deleteFollowTC={deleteFollowTC}
                 />
             </>)
     }
@@ -68,15 +57,13 @@ type MapStatePropsType = {
     currentPage: number
     isFetching: boolean
     followArrayId: Array<string>
+    isAuth: boolean
 }
 type MapDispatchPropsType = {
-    follow: (userId: string) => void
-    unfollow: (userId: string) => void
-    setUsers: (users: Array<UserType>) => void
-    setCurrentPage: (currentPage: number) => void
-    setTotalCount: (totalCount: number) => void
-    setPreloader: (isFetching: boolean) => void
     toggleDisabled: (userId: string, isDisabled: boolean) => void
+    getUsersTC: (currentPage: number, pageSize: number) => void
+    postFollowTC: (userId: string) => void
+    deleteFollowTC: (userId: string) => void
 }
 
 export type UsersType = MapStatePropsType & MapDispatchPropsType
@@ -89,21 +76,11 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
         currentPage: state.usersPage.currentPage,
         isFetching: state.usersPage.isFetching,
         followArrayId: state.usersPage.followArrayId,
+        isAuth: state.auth.isAuth
     }
 }
 
-// const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
-//     return {
-//         follow: (userId) => dispatch(followAC(userId)),
-//         unfollow: (userId) => dispatch(unfollowAC(userId)),
-//         setUsers: (users) => dispatch(setUsersAC(users)),
-//         setCurrentPage: (currentPage) => dispatch(setCurrentPageAC(currentPage)),
-//         setTotalCount: (totalCount) => dispatch(setTotalCountAC(totalCount)),
-//         startPreloader: (isFetching) => dispatch(startPreloaderAC(isFetching))
-//     }
-// }
-
 export const UsersConnect = connect(mapStateToProps, {
-    follow, unfollow, setUsers, setCurrentPage, setTotalCount, setPreloader, toggleDisabled
+    toggleDisabled, getUsersTC, postFollowTC, deleteFollowTC
 })(UsersContainer)
 

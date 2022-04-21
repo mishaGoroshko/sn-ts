@@ -3,9 +3,10 @@ import s from './Dialogs.module.css'
 import DialogItem from './DialogComponents/DialogItem/DialogsItem';
 import Message from './DialogComponents/Message/Message';
 import {DialogsType} from './DialogsContainer';
+import {Navigate} from 'react-router-dom';
 
 
-const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage, onchangeTextAreaMessage, ...props}) => {
+const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage, onchangeTextAreaMessage, isAuth, ...props}) => {
 
     let dialogsElements = dialogsPage.dialogs.map(dialog => <DialogItem key={dialog.id} {...dialog}/>)
     let messagesElements = dialogsPage.messages.map(mes => <Message key={mes.id} {...mes}/>)
@@ -20,6 +21,8 @@ const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage, onchangeTextAr
     const addMessageHandler = () => {
         addMessage()
     }
+
+    if (!isAuth) return <Navigate to="/login"/>
 
     return (
         <div className={s.dialogs}>

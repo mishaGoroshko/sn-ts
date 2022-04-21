@@ -8,6 +8,7 @@ import {addMessageAC, DialogsPageType, onchangeTextAreaMessageAC} from '../../Re
 
 export type MapStatePropsType = {
     dialogsPage: DialogsPageType
+    isAuth: boolean
 }
 
 export type MapDispatchPropsType = {
@@ -19,7 +20,8 @@ export type DialogsType = MapStatePropsType & MapDispatchPropsType
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
-        dialogsPage: state.dialogsPage
+        dialogsPage: state.dialogsPage,
+        isAuth: state.auth.isAuth
     }
 }
 const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
@@ -29,4 +31,4 @@ const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
     }
 }
 
-export const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(Dialogs)
+export const DialogsConnect = connect(mapStateToProps, mapDispatchToProps)(Dialogs)

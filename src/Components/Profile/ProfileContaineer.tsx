@@ -1,11 +1,9 @@
 import React, {ComponentType} from 'react';
 import Profile from './Profile';
-import axios from 'axios';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
-import {setUserProfile, UserProfile} from '../../Redux/profile-reducer';
-import {NavigateFunction, Params, useLocation, useNavigate, useParams} from 'react-router-dom';
-import {profileAPI} from '../../API/api';
+import {getUserProfileTC, UserProfile} from '../../Redux/profile-reducer';
+import {Navigate, useLocation, useNavigate, useParams} from 'react-router-dom';
 
 
 class ProfileContainer extends React.Component<ProfileType> {
@@ -15,32 +13,31 @@ class ProfileContainer extends React.Component<ProfileType> {
         if (!userID) {
             userID = 2
         }
-        profileAPI.getUsersForProfile(userID)
-            .then(data => this.props.setUserProfile(data))
+        this.props.getUserProfileTC(userID)
     }
 
     render() {
-        return (
-            <>
-                <Profile {...this.props} userProfile={this.props.userProfile}/>
-            </>
-        );
+        // @ts-ignore
+        if (!this.props.isAuth) this.props.router.navigate('/login', {replace: true})
+        return <Profile {...this.props} userProfile={this.props.userProfile}/>
     }
 }
 
 type MapStatePropsType = {
     userProfile: UserProfile
+    isAuth: boolean
 }
 
 type MapDispatchPropsType = {
-    setUserProfile: (userProfile: UserProfile) => void
+    getUserProfileTC: (userID: number) => void
 }
 
 type ProfileType = MapStatePropsType & MapDispatchPropsType
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
-        userProfile: state.profilePage.userProfile
+        userProfile: state.profilePage.userProfile,
+        isAuth: state.auth.isAuth
     }
 }
 
@@ -65,4 +62,4 @@ function withRouter<T>(Component: ComponentType<T>) {
     return ComponentWithRouterProp;
 }
 
-export const ProfileConnect = connect(mapStateToProps, {setUserProfile})(withRouter(ProfileContainer))
+export const ProfileConnect = connect(mapStateToProps, {getUserProfileTC})(withRouter(ProfileContainer))

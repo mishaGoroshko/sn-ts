@@ -1,4 +1,6 @@
 import {v1} from 'uuid';
+import {Dispatch} from 'redux';
+import {userAPI} from '../API/api';
 
 type PostType = {
     id: string
@@ -56,7 +58,7 @@ const initialState = {
         {id: v1(), message: 'Hi my first message ', likeCounting: 12},
         {id: v1(), message: 'Hello it\'s me ', likeCounting: 23},
     ] as Array<PostType>,
-    userProfile: user2 ,
+    userProfile: user2,
 }
 
 export type initialStateProfileType = {
@@ -87,22 +89,16 @@ type ActionTypes = ReturnType<typeof addPostAC>
     | ReturnType<typeof onchangeTextareaHandlerAC>
     | ReturnType<typeof setUserProfile>
 
-export const addPostAC = () => {
-    return {
-        type: 'ADD-POST'
-    } as const
-}
+export const addPostAC = () => ({type: 'ADD-POST'} as const)
 
-export const onchangeTextareaHandlerAC = (newText: string) => {
-    return {
-        type: 'ONCHANGE-TEXT-AREA',
-        newText: newText
-    } as const
-}
+export const onchangeTextareaHandlerAC = (newText: string) =>
+    ({type: 'ONCHANGE-TEXT-AREA', newText: newText} as const)
 
-export const setUserProfile = (userProfile: UserProfile) => {
-    return {
-        type: 'SET-USER-PROFILE',
-        payload: {userProfile}
-    } as const
+export const setUserProfile = (userProfile: UserProfile) =>
+    ({type: 'SET-USER-PROFILE', payload: {userProfile}} as const)
+
+
+export const getUserProfileTC = (userID: number) => (dispatch: Dispatch) => {
+    userAPI.getUserForProfile(userID)
+        .then(data => dispatch(setUserProfile(data)))
 }

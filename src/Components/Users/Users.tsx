@@ -3,7 +3,6 @@ import s from './Users.module.css';
 import userPhoto from '../../Assets/images/userPhoto.png';
 import {UserType} from '../../Redux/users-reducer';
 import {NavLink} from 'react-router-dom';
-import {followAPI} from '../../API/api';
 
 type UsersType = {
     totalCountUsers: number
@@ -11,18 +10,16 @@ type UsersType = {
     currentPage: number
     onPageChanged: (pageNumber: number) => void
     users: UserType[]
-    follow: (userId: string) => void
-    unfollow: (userId: string) => void
     followArrayId: Array<string>
-    toggleDisabled: (userId: string, isDisabled: boolean) => void
-
+    postFollowTC: (userId: string) => void
+    deleteFollowTC: (userId: string) => void
 }
 
-export const Users: React.FC<UsersType> = ({
-                                               totalCountUsers, pageSize, currentPage,
-                                               onPageChanged, users, follow,
-                                               unfollow, followArrayId, toggleDisabled
-                                           }) => {
+export const Users: React.FC<UsersType> = (
+    {
+        totalCountUsers, pageSize, currentPage,
+        onPageChanged, users, followArrayId, postFollowTC, deleteFollowTC
+    }) => {
 
     let totalPages = Math.ceil(totalCountUsers / pageSize)
 
@@ -41,24 +38,16 @@ export const Users: React.FC<UsersType> = ({
                 return (
                     <div key={u.id} className={s.block}>
                         <div className={s.blockAva}>
-                            <NavLink to={`/profile/${u.id}`}><img
-                                src={u.photos.small !== null ? u.photos.small : userPhoto}
-                                className={s.image}/></NavLink>
+                            <NavLink to={`/profile/${u.id}`}>
+                                <img
+                                    src={u.photos.small !== null ? u.photos.small : userPhoto}
+                                    className={s.image} alt="users photo"/>
+                            </NavLink>
                             {u.followed
-                                ? <button disabled={followArrayId.some(el => el === u.id)}  onClick={() => {
-                                    toggleDisabled(u.id, true)
-                                    followAPI.deleteFollow(u.id).then(data => {
-                                        toggleDisabled(u.id, false)
-                                        data.resultCode === 0 && unfollow(u.id)
-                                    })
-                                }} className={s.button}>unfollow</button>
-                                : <button disabled={followArrayId.some(el => el === u.id)} onClick={() => {
-                                    toggleDisabled(u.id, true)
-                                    followAPI.postFollow(u.id).then(data => {
-                                        toggleDisabled(u.id, false)
-                                        data.resultCode === 0 && follow(u.id)
-                                    })
-                                }}>follow</button>}
+                                ? <button disabled={followArrayId.some(el => el === u.id)}
+                                          onClick={() => deleteFollowTC(u.id)}>unfollow</button>
+                                : <button disabled={followArrayId.some(el => el === u.id)}
+                                          onClick={() => postFollowTC(u.id)}>follow</button>}
                         </div>
                         <div className={s.allInfo}>
                             <div className={s.nameStatus}>

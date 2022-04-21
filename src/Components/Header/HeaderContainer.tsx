@@ -2,26 +2,15 @@ import React from 'react';
 import Header from './Header';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
-import {setUserData} from '../../Redux/auth-reducer';
-import {authAPI} from '../../API/api';
+import {getUserDataTC} from '../../Redux/auth-reducer';
 
 export class HeaderContainer extends React.Component<HeaderType> {
     componentDidMount() {
-        authAPI.getAuth()
-            .then(data => {
-                if (data.resultCode === 0) {
-                    let {id, email, login} = data.data
-                    this.props.setUserData(id, email, login)
-                }
-            })
+        this.props.getUserDataTC()
     }
 
     render() {
-        return (
-            <>
-                <Header {...this.props}/>
-            </>
-        );
+        return <Header {...this.props}/>
     }
 }
 
@@ -32,7 +21,7 @@ type MpaStatePropsType = {
     isAuth: boolean
 }
 type MpaDispatchPropsType = {
-    setUserData: (id: number | null, email: string | null, login: string | null) => void
+    getUserDataTC: () => void
 }
 export type HeaderType = MpaStatePropsType & MpaDispatchPropsType
 
@@ -46,4 +35,4 @@ const mapStateToProps = (state: AppStateType): MpaStatePropsType => {
 }
 
 
-export const HeaderConnect = connect(mapStateToProps, {setUserData})(HeaderContainer)
+export const HeaderConnect = connect(mapStateToProps, {getUserDataTC})(HeaderContainer)
