@@ -32,14 +32,27 @@ type authAPIType = {
 
 export const userAPI = {
     getUsers: (currentPage: number, pageSize: number) =>
-        instance.get<userAPIType>(`users?page=${currentPage}&count=${pageSize}`).then(res => res.data),
-    postFollow: (id: string) => instance.post<followAPIType>(`follow/${id}`).then(res => res.data),
-    deleteFollow: (id: string) => instance.delete<followAPIType>(`follow/${id}`).then(res => res.data),
-    getUserForProfile: (userID: number) => instance.get<UserProfile>(`profile/${userID}`)
-        .then(res => res.data),
+        instance
+            .get<userAPIType>(`users?page=${currentPage}&count=${pageSize}`)
+            .then(res => res.data),
+    postFollow: (id: string) =>
+        instance
+            .post<followAPIType>(`follow/${id}`)
+            .then(res => res.data),
+    deleteFollow: (id: string) =>
+        instance
+            .delete<followAPIType>(`follow/${id}`)
+            .then(res => res.data),
+    getUserForProfile: (userID: number) =>
+        instance
+            .get<UserProfile>(`profile/${userID}`)
+            .then(res => res.data),
 }
 
 export const authAPI = {
-    getAuth: () => instance.get<authAPIType>(`auth/me`).then(res => res.data),
+    getAuth: () =>
+        instance
+            .get<authAPIType>(`auth/me`)
+            .then(res => res.data),
 }
 
