@@ -3,16 +3,14 @@ import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
 import {
     deleteFollowTC,
-    follow,
     getUsersTC,
     postFollowTC,
     toggleDisabled,
-    unfollow,
     UserType
 } from '../../Redux/users-reducer';
 import {Users} from './Users';
 import {Preloader} from '../common/Preloader/Preloader';
-import {Navigate} from 'react-router-dom';
+import {WithAuthRedirect} from '../../hoc/withAuthRedirect';
 
 
 class UsersContainer extends React.Component<UsersType> {
@@ -27,24 +25,11 @@ class UsersContainer extends React.Component<UsersType> {
         this.props.getUsersTC(pageNumber, this.props.pageSize)
 
     render() {
-        let {
-            users, pageSize, totalCountUsers, currentPage, isFetching, followArrayId, isAuth,
-            postFollowTC, deleteFollowTC
-        } = this.props;
-
-        if (!isAuth) return <Navigate to="/login"/>
-
         return (
             <>
-                <Preloader isFetching={isFetching}/>
-                <Users users={users}
-                       currentPage={currentPage}
-                       pageSize={pageSize}
-                       totalCountUsers={totalCountUsers}
-                       onPageChanged={this.onPageChanged}
-                       followArrayId={followArrayId}
-                       postFollowTC={postFollowTC}
-                       deleteFollowTC={deleteFollowTC}
+                <Preloader isFetching={this.props.isFetching}/>
+                <Users onPageChanged={this.onPageChanged} {...this.props}
+
                 />
             </>)
     }
@@ -57,7 +42,6 @@ type MapStatePropsType = {
     currentPage: number
     isFetching: boolean
     followArrayId: Array<string>
-    isAuth: boolean
 }
 type MapDispatchPropsType = {
     toggleDisabled: (userId: string, isDisabled: boolean) => void
@@ -76,11 +60,10 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
         currentPage: state.usersPage.currentPage,
         isFetching: state.usersPage.isFetching,
         followArrayId: state.usersPage.followArrayId,
-        isAuth: state.auth.isAuth
     }
 }
 
-export const UsersConnect = connect(mapStateToProps, {
+export const UsersConnect = WithAuthRedirect(connect(mapStateToProps, {
     toggleDisabled, getUsersTC, postFollowTC, deleteFollowTC
-})(UsersContainer)
+})(UsersContainer))
 

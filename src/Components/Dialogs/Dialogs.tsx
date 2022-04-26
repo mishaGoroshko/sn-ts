@@ -3,13 +3,19 @@ import s from './Dialogs.module.css'
 import DialogItem from './DialogComponents/DialogItem/DialogsItem';
 import Message from './DialogComponents/Message/Message';
 import {DialogsType} from './DialogsContainer';
-import {Navigate} from 'react-router-dom';
 
 
-const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage, onchangeTextAreaMessage, isAuth, ...props}) => {
+const Dialogs: React.FC<DialogsType> = ({
+                                            dialogsPage,
+                                            addMessage,
+                                            onchangeTextAreaMessage,
+                                            ...props
+                                        }) => {
 
-    let dialogsElements = dialogsPage.dialogs.map(dialog => <DialogItem key={dialog.id} {...dialog}/>)
-    let messagesElements = dialogsPage.messages.map(mes => <Message key={mes.id} {...mes}/>)
+    let dialogsElements = dialogsPage.dialogs.map(dialog => <DialogItem
+        key={dialog.id} {...dialog}/>)
+    let messagesElements = dialogsPage.messages.map(mes => <Message
+        key={mes.id} {...mes}/>)
 
     // const messageRef = React.createRef<HTMLTextAreaElement>()
     // const sendMessage = () => {alert(messageRef.current?.value)}
@@ -22,8 +28,6 @@ const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage, onchangeTextAr
         addMessage()
     }
 
-    if (!isAuth) return <Navigate to="/login"/>
-
     return (
         <div className={s.dialogs}>
             <div>
@@ -31,7 +35,8 @@ const Dialogs: React.FC<DialogsType> = ({dialogsPage, addMessage, onchangeTextAr
             </div>
             <div className={s.messages}>
                 {messagesElements}
-                <textarea value={dialogsPage.newMessageBody} onChange={onchangeTextAreaMessageHandler}
+                <textarea value={dialogsPage.newMessageBody}
+                          onChange={onchangeTextAreaMessageHandler}
                           placeholder={'enter yuor message'}/> {/*ref={messageRef}*/}
                 <button onClick={addMessageHandler}>send</button>
                 {/*onClick={sendMessage}*/}
