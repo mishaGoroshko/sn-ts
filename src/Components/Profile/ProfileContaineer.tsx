@@ -10,13 +10,14 @@ import {
     useNavigate,
     useParams
 } from 'react-router-dom';
-import {WithAuthRedirect} from '../../hoc/withAuthRedirect';
+import {withAuthRedirect} from '../../hoc/withAuthRedirect';
 import {compose} from 'redux';
 
 
 class ProfileContainer extends React.Component<ProfileType & WithRouterType> {
     componentDidMount() {
-        let userID: number | null = this.props.router?.params['*'];
+        // @ts-ignore
+        let userID: number | null = this.props.router.params['*'];
         if (!userID) {
             userID = 2
         }
@@ -48,6 +49,7 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
 }
 
 type WithRouterType = Location & NavigateFunction & Readonly<Params<string>>;
+
 // type WithRouterType = Readonly<Params<string>>;
 
 
@@ -58,9 +60,8 @@ function withRouter<T>(Component: ComponentType<T>) {
         let params = useParams();
         return (
             <Component
-                {...props as T}
+                {...props}
                 router={{location, navigate, params}}
-                // params={params}
             />
         );
     }
@@ -68,10 +69,5 @@ function withRouter<T>(Component: ComponentType<T>) {
     return ComponentWithRouterProp;
 }
 
-// const TestComponent = connect(mapStateToProps, {getUserProfileTC})(ProfileContainer)
-//
-// export const ProfileConnect = WithAuthRedirect<ProfileType & WithRouterType>(withRouter<ProfileType>(TestComponent))
-
-export default compose<ComponentType>(WithAuthRedirect, withRouter,
-    connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {getUserProfileTC})
-)(ProfileContainer);
+export default compose<ComponentType>(connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {getUserProfileTC}),
+    withRouter, withAuthRedirect)(ProfileContainer);

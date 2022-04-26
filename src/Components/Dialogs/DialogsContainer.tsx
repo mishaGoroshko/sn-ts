@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {ComponentType} from 'react';
 import Dialogs from './Dialogs';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
-import {Dispatch} from 'redux';
+import {compose, Dispatch} from 'redux';
 import {
     addMessageAC,
     DialogsPageType,
     onchangeTextAreaMessageAC
 } from '../../Redux/dialogs-reducer';
-import {WithAuthRedirect} from '../../hoc/withAuthRedirect';
+import {withAuthRedirect} from '../../hoc/withAuthRedirect';
 
 export type MapStatePropsType = {
     dialogsPage: DialogsPageType
@@ -33,4 +33,4 @@ const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
     }
 }
 
-export const DialogsConnect = WithAuthRedirect(connect(mapStateToProps, mapDispatchToProps)(Dialogs))
+export const DialogsConnect = compose<ComponentType>(connect(mapStateToProps, mapDispatchToProps), withAuthRedirect)(Dialogs)

@@ -3,29 +3,30 @@ import s from './ProfileInfo.module.css'
 import {UserProfile} from '../../../Redux/profile-reducer';
 import {Preloader} from '../../common/Preloader/Preloader';
 import userPhoto from '../../../Assets/images/userPhoto.png';
+import {ProfileStatus} from '../../ProfileStatus';
 
 
 type ProfileInfoType = {
     userProfile: UserProfile
 }
 
-const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
+export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
     if (!userProfile) {
         return <Preloader isFetching={true}/>
     }
     return (
         <div className={s.content}>
-            <div>
-                <img
-                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png"
-                    width={'300px'} alt=""/>
-            </div>
+
             <div className={s.avaDescription}>
-                <img src={userProfile.photos.large !== null ? userProfile.photos.large : userPhoto} alt="ava"/>
+                <img
+                    src={userProfile.photos.large !== null ? userProfile.photos.large : userPhoto}
+                    alt="ava"/>
                 <div>{userProfile.fullName}</div>
+
+                <ProfileStatus status={'I can do it'}/>
             </div>
         </div>
-    );
+    )
 };
 
 export default ProfileInfo;

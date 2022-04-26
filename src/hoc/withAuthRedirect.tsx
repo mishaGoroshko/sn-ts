@@ -8,7 +8,7 @@ type MapStatePropsType = { isAuth: boolean }
 
 const mapSateToProps = (state: AppStateType): MapStatePropsType => ({isAuth: state.auth.isAuth})
 
-export function WithAuthRedirect<T>(Component: ComponentType<T>) {
+export function withAuthRedirect<T>(Component: ComponentType<T>) {
 
     const RedirectComponent: React.FC<MapStatePropsType> = ({isAuth, ...props}) => {
 
