@@ -6,12 +6,14 @@ import {UserProfile} from '../../Redux/profile-reducer';
 
 type ProfileType = {
     userProfile: UserProfile
+    status: string
+    updateStatusTC: (status: string) => void
 }
 
-const Profile: React.FC<ProfileType> = ({userProfile,...props}) => {
+const Profile: React.FC<ProfileType> = (props) => {
     return (
         <div className={s.content}>
-            <ProfileInfo userProfile={userProfile}/>
+            <ProfileInfo {...props}/>
             <MyPostContainer/>
         </div>
     );

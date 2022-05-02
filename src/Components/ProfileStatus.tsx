@@ -2,13 +2,14 @@ import React, {ChangeEvent, KeyboardEvent} from 'react';
 
 type StatusType = {
     status: string
+    updateStatusTC: (status: string) => void
 }
 
 export class ProfileStatus extends React.Component<StatusType> {
 
     state = {
         editMode: false,
-        title: this.props.status
+        localStatus: this.props.status
     }
 
     activateEditMode = () => {
@@ -19,20 +20,30 @@ export class ProfileStatus extends React.Component<StatusType> {
 
     deactivateEditMode = () => {
         this.setState({
-            editMode: false
+            editMode: false,
         })
+        this.props.updateStatusTC(this.state.localStatus)
     }
 
     onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => {
         this.setState({
-            title: e.currentTarget.value
+            localStatus: e.currentTarget.value
         })
     }
 
     onKeyPressInput = (e: KeyboardEvent<HTMLInputElement>) => {
-        e.key === 'Enter' &&
+        if (e.key === 'Enter') {
+            this.setState({
+                editMode: false
+            })
+            this.props.updateStatusTC(this.state.localStatus)
+        }
+    }
+
+    componentDidUpdate(prevProps: Readonly<StatusType>, prevState: Readonly<{}>, snapshot?: any) {
+        prevProps.status !== this.props.status &&
         this.setState({
-            editMode: false
+            localStatus: this.props.status
         })
     }
 
@@ -41,17 +52,17 @@ export class ProfileStatus extends React.Component<StatusType> {
             activateEditMode, deactivateEditMode,
             onChangeInputHandler, onKeyPressInput
         } = this
-        let {title, editMode} = this.state
+        let {localStatus, editMode} = this.state
         return (
             <div>
                 {editMode
-                    ? <input value={title}
+                    ? <input value={localStatus}
                              onChange={onChangeInputHandler}
                              onKeyPress={onKeyPressInput}
                              onBlur={deactivateEditMode}
                              autoFocus/>
                     : <h4 onDoubleClick={activateEditMode}>
-                        MY STATUS: {title}</h4>}
+                        MY STATUS: {this.props.status || '------'}</h4>}
             </div>
         );
     }

@@ -1,6 +1,6 @@
 import {v1} from 'uuid';
 import {Dispatch} from 'redux';
-import {userAPI} from '../API/api';
+import {profileAPI, userAPI} from '../API/api';
 
 type PostType = {
     id: string
@@ -59,12 +59,14 @@ const initialState = {
         {id: v1(), message: 'Hello it\'s me ', likeCounting: 23},
     ] as Array<PostType>,
     userProfile: user2,
+    status: ''
 }
 
 export type initialStateProfileType = {
     messageForNewPost: string
     posts: Array<PostType>
     userProfile: UserProfile
+    status: string
 }
 
 export const profileReducer = (state: initialStateProfileType = initialState, action: ActionTypes): initialStateProfileType => {
@@ -73,13 +75,19 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
             if (state.messageForNewPost.trim()) {
                 return {
                     ...state, messageForNewPost: '',
-                    posts: [...state.posts, {id: v1(), message: state.messageForNewPost.trim(), likeCounting: 0}]
+                    posts: [...state.posts, {
+                        id: v1(),
+                        message: state.messageForNewPost.trim(),
+                        likeCounting: 0
+                    }]
                 }
             } else return {...state, messageForNewPost: ''}
         case 'ONCHANGE-TEXT-AREA':
             return {...state, messageForNewPost: action.newText};
         case 'SET-USER-PROFILE':
             return {...state, userProfile: action.payload.userProfile}
+        case 'SET-STATUS':
+            return {...state, status: action.payload.status}
         default:
             return state
     }
@@ -88,6 +96,7 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
 type ActionTypes = ReturnType<typeof addPostAC>
     | ReturnType<typeof onchangeTextareaHandlerAC>
     | ReturnType<typeof setUserProfile>
+    | ReturnType<typeof setStatus>
 
 export const addPostAC = () => ({type: 'ADD-POST'} as const)
 
@@ -97,8 +106,23 @@ export const onchangeTextareaHandlerAC = (newText: string) =>
 export const setUserProfile = (userProfile: UserProfile) =>
     ({type: 'SET-USER-PROFILE', payload: {userProfile}} as const)
 
+export const setStatus = (status: string) =>
+    ({type: 'SET-STATUS', payload: {status}} as const)
 
-export const getUserProfileTC = (userID: number) => (dispatch: Dispatch) => {
+
+export const getUserProfileTC = (userID: number) => (dispatch: Dispatch) =>
     userAPI.getUserForProfile(userID)
         .then(data => dispatch(setUserProfile(data)))
-}
+
+
+export const getStatusTC = (userID: number) => (dispatch: Dispatch) =>
+    profileAPI.getStatus(userID)
+        .then(data => dispatch(setStatus(data)))
+
+export const updateStatusTC = (status: string) => (dispatch: Dispatch) =>
+    profileAPI.updateStatus(status)
+        .then(data => {
+            if (data.resultCode === 0) {
+                dispatch(setStatus(status))
+            }
+        })

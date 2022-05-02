@@ -2,7 +2,12 @@ import React, {ComponentType} from 'react';
 import Profile from './Profile';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
-import {getUserProfileTC, UserProfile} from '../../Redux/profile-reducer';
+import {
+    getStatusTC,
+    getUserProfileTC,
+    updateStatusTC,
+    UserProfile
+} from '../../Redux/profile-reducer';
 import {
     NavigateFunction,
     Params,
@@ -19,25 +24,33 @@ class ProfileContainer extends React.Component<ProfileType & WithRouterType> {
         // @ts-ignore
         let userID: number | null = this.props.router.params['*'];
         if (!userID) {
-            userID = 2
+            userID = 23001
         }
         this.props.getUserProfileTC(userID)
+        this.props.getStatusTC(userID)
     }
 
     render() {
         //@ts-ignore
         // if (!this.props.isAuth) this.props.router.navigate('/login', {replace: true})
 
-        return <Profile {...this.props} userProfile={this.props.userProfile}/>
+        return <Profile {...this.props}
+                        userProfile={this.props.userProfile}
+                        status={this.props.status}
+                        updateStatusTC={this.props.updateStatusTC}
+        />
     }
 }
 
 type MapStatePropsType = {
     userProfile: UserProfile
+    status: string
 }
 
 type MapDispatchPropsType = {
     getUserProfileTC: (userID: number) => void
+    getStatusTC: (userID: number) => void
+    updateStatusTC: (status: string) => void
 }
 
 type ProfileType = MapStatePropsType & MapDispatchPropsType
@@ -45,6 +58,7 @@ type ProfileType = MapStatePropsType & MapDispatchPropsType
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
         userProfile: state.profilePage.userProfile,
+        status: state.profilePage.status
     }
 }
 
@@ -69,5 +83,9 @@ function withRouter<T>(Component: ComponentType<T>) {
     return ComponentWithRouterProp;
 }
 
-export default compose<ComponentType>(connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>(mapStateToProps, {getUserProfileTC}),
-    withRouter, withAuthRedirect)(ProfileContainer);
+export default compose<ComponentType>
+(connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>
+    (mapStateToProps, {getUserProfileTC, getStatusTC, updateStatusTC}),
+    withRouter,
+    withAuthRedirect)
+(ProfileContainer);

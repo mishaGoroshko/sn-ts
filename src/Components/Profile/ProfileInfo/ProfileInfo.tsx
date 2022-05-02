@@ -8,9 +8,11 @@ import {ProfileStatus} from '../../ProfileStatus';
 
 type ProfileInfoType = {
     userProfile: UserProfile
+    status: string
+    updateStatusTC: (status: string) => void
 }
 
-export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
+export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile, status, updateStatusTC}) => {
     if (!userProfile) {
         return <Preloader isFetching={true}/>
     }
@@ -23,7 +25,7 @@ export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
                     alt="ava"/>
                 <div>{userProfile.fullName}</div>
 
-                <ProfileStatus status={userProfile.aboutMe}/>
+                <ProfileStatus status={status} updateStatusTC={updateStatusTC}/>
             </div>
         </div>
     )
