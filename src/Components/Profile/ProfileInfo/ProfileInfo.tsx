@@ -23,7 +23,7 @@ export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile}) => {
                     alt="ava"/>
                 <div>{userProfile.fullName}</div>
 
-                <ProfileStatus status={'I can do it'}/>
+                <ProfileStatus status={userProfile.aboutMe}/>
             </div>
         </div>
     )

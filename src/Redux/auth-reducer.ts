@@ -35,7 +35,7 @@ export const setUserData = (id: number | null, email: string | null, login: stri
     } as const
 }
 
-export const getUserDataTC= () => (dispatch: Dispatch) => {
+export const getUserDataTC = () => (dispatch: Dispatch) => {
     authAPI.getAuth()
         .then(data => {
             if (data.resultCode === 0) {
