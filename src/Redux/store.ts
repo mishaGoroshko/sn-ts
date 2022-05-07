@@ -1,6 +1,6 @@
-import {addPostAC, onchangeTextareaHandlerAC, profileReducer} from "./profile-reducer";
-import {addMessageAC, dialogsReducer, onchangeTextAreaMessageAC} from "./dialogs-reducer";
-import {sidebarReducer} from "./sidebar-reducer";
+import {addPostAC} from './profile-reducer';
+import {addMessageAC} from './dialogs-reducer';
+import {sidebarReducer} from './sidebar-reducer';
 import {v1} from 'uuid';
 
 type postType = {
@@ -38,7 +38,6 @@ type ProfilePageType = {
 type DialogsPageType = {
     dialogs: Array<dialogType>
     messages: Array<messageType>
-    newMessageBody: string
 }
 
 type RootStateType = {
@@ -57,8 +56,6 @@ type StoreType = {
 
 export type ActionsTypes =
     ReturnType<typeof addPostAC>
-    | ReturnType<typeof onchangeTextareaHandlerAC>
-    | ReturnType<typeof onchangeTextAreaMessageAC>
     | ReturnType<typeof addMessageAC>
 
 const store: StoreType = {
@@ -106,7 +103,6 @@ const store: StoreType = {
                 {id: v1(), message: 'Yo'},
                 {id: v1(), message: 'Yo'}
             ],
-            newMessageBody: ''
         },
         sidebar: {
             friends: [
@@ -139,7 +135,7 @@ const store: StoreType = {
     },
     dispatch(action) {
         // this._state.profilePage = profileReducer(this._state.profilePage, action)
-        this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
+        // this._state.dialogsPage = dialogsReducer(this._state.dialogsPage, action)
         this._state.sidebar = sidebarReducer(this._state.sidebar, action)
         this._onChange()
     }

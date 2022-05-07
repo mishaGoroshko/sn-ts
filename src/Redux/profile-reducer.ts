@@ -53,7 +53,6 @@ const user2 = {
 }
 
 const initialState = {
-    messageForNewPost: 'XY',
     posts: [
         {id: v1(), message: 'Hi my first message ', likeCounting: 12},
         {id: v1(), message: 'Hello it\'s me ', likeCounting: 23},
@@ -63,27 +62,15 @@ const initialState = {
 }
 
 export type initialStateProfileType = {
-    messageForNewPost: string
     posts: Array<PostType>
     userProfile: UserProfile
     status: string
 }
 
-export const profileReducer = (state: initialStateProfileType = initialState, action: ActionTypes): initialStateProfileType => {
+export const profileReducer = (state: initialStateProfileType = initialState, action: ProfileActionTypes): initialStateProfileType => {
     switch (action.type) {
         case 'ADD-POST':
-            if (state.messageForNewPost.trim()) {
-                return {
-                    ...state, messageForNewPost: '',
-                    posts: [...state.posts, {
-                        id: v1(),
-                        message: state.messageForNewPost.trim(),
-                        likeCounting: 0
-                    }]
-                }
-            } else return {...state, messageForNewPost: ''}
-        case 'ONCHANGE-TEXT-AREA':
-            return {...state, messageForNewPost: action.newText};
+            return {...state, posts: [...state.posts, {id: v1(), message: action.payload.newPost, likeCounting: 0}]}
         case 'SET-USER-PROFILE':
             return {...state, userProfile: action.payload.userProfile}
         case 'SET-STATUS':
@@ -93,15 +80,15 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
     }
 }
 
-type ActionTypes = ReturnType<typeof addPostAC>
-    | ReturnType<typeof onchangeTextareaHandlerAC>
+type ProfileActionTypes = ReturnType<typeof addPostAC>
     | ReturnType<typeof setUserProfile>
     | ReturnType<typeof setStatus>
+    | ReturnType<typeof addPostAC>
 
-export const addPostAC = () => ({type: 'ADD-POST'} as const)
-
-export const onchangeTextareaHandlerAC = (newText: string) =>
-    ({type: 'ONCHANGE-TEXT-AREA', newText: newText} as const)
+export const addPostAC = (newPost: string) => ({
+    type: 'ADD-POST',
+    payload: {newPost}
+} as const)
 
 export const setUserProfile = (userProfile: UserProfile) =>
     ({type: 'SET-USER-PROFILE', payload: {userProfile}} as const)
@@ -113,7 +100,6 @@ export const setStatus = (status: string) =>
 export const getUserProfileTC = (userID: number) => (dispatch: Dispatch) =>
     userAPI.getUserForProfile(userID)
         .then(data => dispatch(setUserProfile(data)))
-
 
 export const getStatusTC = (userID: number) => (dispatch: Dispatch) =>
     profileAPI.getStatus(userID)

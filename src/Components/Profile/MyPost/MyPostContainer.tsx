@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {addPostAC, initialStateProfileType, onchangeTextareaHandlerAC} from '../../../Redux/profile-reducer';
-import MyPost from './MyPost';
+import {addPostAC, initialStateProfileType} from '../../../Redux/profile-reducer';
+import {MyPost} from './MyPost';
 import {AppStateType} from '../../../Redux/redux-store';
 import {Dispatch} from 'redux';
 
@@ -11,8 +11,7 @@ type MapStatePropsType = {
 }
 
 type MapDispatchPropsType = {
-    onchangeTextarea: (newText: string) => void
-    addPost: () => void
+    addPost: (newPost: string) => void
 }
 
 export type MyPostType = MapStatePropsType & MapDispatchPropsType
@@ -25,8 +24,7 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
 
 const mapDispatchToProps = (dispatch: Dispatch): MapDispatchPropsType => {
     return {
-        onchangeTextarea: (newText: string) => dispatch(onchangeTextareaHandlerAC(newText)),
-        addPost: () => dispatch(addPostAC())
+        addPost: (newPost: string) => dispatch(addPostAC(newPost))
     }
 }
 

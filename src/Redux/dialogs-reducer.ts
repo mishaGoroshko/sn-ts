@@ -1,4 +1,3 @@
-import {ActionsTypes} from './store';
 import {v1} from 'uuid';
 
 export type dialogType = {
@@ -15,7 +14,6 @@ type messageType = {
 export type DialogsPageType = {
     dialogs: Array<dialogType>
     messages: Array<messageType>
-    newMessageBody: string
 }
 
 let initialState: DialogsPageType = {
@@ -35,7 +33,11 @@ let initialState: DialogsPageType = {
             name: 'Polina',
             image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHKBtROJ2Tc0e9-aQ5BlDFo98XliTit9wXjQ&usqp=CAU'
         },
-        {id: v1(), name: 'Sasha', image: 'https://www.covenok.ru/files/tiny_images/training/161.png'},
+        {
+            id: v1(),
+            name: 'Sasha',
+            image: 'https://www.covenok.ru/files/tiny_images/training/161.png'
+        },
         {
             id: v1(),
             name: 'Maja',
@@ -54,32 +56,24 @@ let initialState: DialogsPageType = {
         {id: v1(), message: 'Yo'},
         {id: v1(), message: 'Yo'}
     ],
-    newMessageBody: ''
 }
 
-export const dialogsReducer = (state: DialogsPageType = initialState, action: ActionsTypes): DialogsPageType => {
+export const dialogsReducer = (state: DialogsPageType = initialState, action: DialogActionsType): DialogsPageType => {
     switch (action.type) {
-        case 'ONCHANGE-TEXT-AREA-MESSAGES':
-            return {...state, newMessageBody: action.body}
         case 'ADD-MESSAGE':
-            return state.newMessageBody.trim() ? {
-                ...state,
-                newMessageBody: '',
-                messages: [...state.messages, {id: v1(), message: state.newMessageBody.trim()}]
-            } : {...state, newMessageBody: ''}
+            return {
+                ...state, messages: [...state.messages, {
+                    id: v1(), message: action.payload.newMessageBody
+                }]
+            }
         default:
             return state
     }
 }
-export const onchangeTextAreaMessageAC = (body: string) => {
-    return {
-        type: 'ONCHANGE-TEXT-AREA-MESSAGES',
-        body: body
-    } as const
-}
 
-export const addMessageAC = () => {
-    return {
-        type: 'ADD-MESSAGE'
-    } as const
+type addMessageACType = ReturnType<typeof addMessageAC>
+type DialogActionsType = addMessageACType
+
+export const addMessageAC = (newMessageBody: string) => {
+    return {type: 'ADD-MESSAGE', payload: {newMessageBody}} as const
 }
