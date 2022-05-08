@@ -1,0 +1,16 @@
+.norm input,
+.norm textarea {
+    outline: none;
+    border: 1px solid green;
+}
+
+.error input,
+.error textarea {
+    border: 1px solid red;
+    outline: none
+}
+
+.error span {
+    color: red;
+}
+
