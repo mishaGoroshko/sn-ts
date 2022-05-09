@@ -11,7 +11,7 @@ export const Textarea: React.FC<any> = ({
         <div className={err ? s.error : s.norm}>
             {type === 'textarea'
                 ? <textarea {...input} {...props}/>
-                : <input {...input} {...props}/>}
+                : <input type={type} {...input} {...props}/>}
             <div>
                 {err && <span>{error}</span>}
             </div>

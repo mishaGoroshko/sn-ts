@@ -1,4 +1,3 @@
-import {ActionsTypes} from './store';
 import {v1} from 'uuid';
 
 type FriendType = {
@@ -29,6 +28,8 @@ let initialState = {
 
 export type InitialStateSidebarType = typeof initialState
 
-export const sidebarReducer = (state: InitialStateSidebarType = initialState, action: ActionsTypes): InitialStateSidebarType => {
+export const sidebarReducer = (state: InitialStateSidebarType = initialState, action: SidebarActionsType): InitialStateSidebarType => {
     return state
 }
+
+export type SidebarActionsType = {}

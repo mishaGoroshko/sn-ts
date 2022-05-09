@@ -10,7 +10,7 @@ import {FriendsContainer} from './Components/Friends/FriendsContainer';
 import {UsersConnect} from './Components/Users/UsersContainer';
 import ProfileConnect from './Components/Profile/ProfileContaineer';
 import {HeaderConnect} from './Components/Header/HeaderContainer';
-import {Login} from './Components/Login/Login';
+import {LoginConnect} from './Components/Login/Login';
 
 type AppType = {}
 
@@ -28,7 +28,7 @@ const App: React.FC<AppType> = ({...props}) => {
                     <Route path="/users/*" element={<UsersConnect/>}/>
                     <Route path="/settings/*" element={<Settings/>}/>
                     <Route path="/friends/*" element={<FriendsContainer/>}/>
-                    <Route path="/login/*" element={<Login/>}/>
+                    <Route path="/login/*" element={<LoginConnect/>}/>
                 </Routes>
             </div>
         </div>

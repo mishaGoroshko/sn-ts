@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './Header';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
-import {getUserDataTC} from '../../Redux/auth-reducer';
+import {getAuthUserDataTC, logoutAuthTC} from '../../Redux/auth-reducer';
 
 export class HeaderContainer extends React.Component<HeaderType> {
     componentDidMount() {
@@ -22,6 +22,7 @@ type MpaStatePropsType = {
 }
 type MpaDispatchPropsType = {
     getUserDataTC: () => void
+    logoutAuthTC: () => void
 }
 export type HeaderType = MpaStatePropsType & MpaDispatchPropsType
 
@@ -35,4 +36,4 @@ const mapStateToProps = (state: AppStateType): MpaStatePropsType => {
 }
 
 
-export const HeaderConnect = connect(mapStateToProps, {getUserDataTC})(HeaderContainer)
+export const HeaderConnect = connect(mapStateToProps, {getUserDataTC: getAuthUserDataTC, logoutAuthTC})(HeaderContainer)

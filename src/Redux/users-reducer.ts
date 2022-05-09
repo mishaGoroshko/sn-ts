@@ -26,7 +26,7 @@ let initialState = {
 
 export type InitialStateUsersType = typeof initialState
 
-export const UsersReducer = (state: InitialStateUsersType = initialState, action: ACTypes): InitialStateUsersType => {
+export const UsersReducer = (state: InitialStateUsersType = initialState, action: UsersActionsType): InitialStateUsersType => {
     switch (action.type) {
         case 'FOLLOW':
             return {
@@ -64,7 +64,7 @@ type setCurrentPageACACType = ReturnType<typeof setCurrentPage>
 type setTotalCountACType = ReturnType<typeof setTotalCount>
 type setPreloaderACType = ReturnType<typeof setPreloader>
 type toggleDisabledACType = ReturnType<typeof toggleDisabled>
-type ACTypes = followACType
+export type UsersActionsType = followACType
     | unfollowACType
     | setUsersACType
     | setCurrentPageACACType

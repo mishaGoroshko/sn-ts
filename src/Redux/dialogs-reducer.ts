@@ -72,7 +72,7 @@ export const dialogsReducer = (state: DialogsPageType = initialState, action: Di
 }
 
 type addMessageACType = ReturnType<typeof addMessageAC>
-type DialogActionsType = addMessageACType
+export type DialogActionsType = addMessageACType
 
 export const addMessageAC = (newMessageBody: string) => {
     return {type: 'ADD-MESSAGE', payload: {newMessageBody}} as const
