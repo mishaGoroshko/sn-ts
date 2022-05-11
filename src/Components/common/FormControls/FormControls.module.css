@@ -14,3 +14,8 @@
     color: red;
 }
 
+.errorMessage {
+    border: 1px solid red;
+    color: red;
+}
+

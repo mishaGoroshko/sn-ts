@@ -1,6 +1,7 @@
 import {Dispatch} from 'redux'
 import {authAPI} from '../API/api';
 import {AppThunk} from './redux-store';
+import {stopSubmit} from 'redux-form';
 
 export type InitStateType = {
     id: number | null
@@ -27,11 +28,10 @@ export const authReducer = (state: InitStateType = initState, action: AuthAction
 
 export type AuthActionsType = ReturnType<typeof setUserData>
 
-
 export const setUserData = (id: number | null, email: string | null, login: string | null, isAuth: boolean) => {
     return {
         type: 'SET-USER-DATA',
-        payload:  {id, email, login, isAuth}
+        payload: {id, email, login, isAuth}
     } as const
 }
 
@@ -48,8 +48,14 @@ export const getAuthUserDataTC = () => (dispatch: Dispatch) => {
 
 export const loginAuthTC = (email: string, password: string, rememberMe: boolean): AppThunk => async dispatch => {
     const res = await authAPI.login(email, password, rememberMe)
-    res.resultCode === 0 && dispatch(getAuthUserDataTC())
+    if (res.resultCode === 0) {
+        dispatch(getAuthUserDataTC())
+    } else {
+        let message = res.messages.length > 0 ? res.messages[0] : 'some error'
+        dispatch(stopSubmit('login', {_error: message}))
+    }
 }
+
 
 export const logoutAuthTC = (): AppThunk => async dispatch => {
     const res = await authAPI.logout()

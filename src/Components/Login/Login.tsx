@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {loginAuthTC} from '../../Redux/auth-reducer';
 import {AppStateType} from '../../Redux/redux-store';
 import {Navigate} from 'react-router-dom';
+import s from '../common/FormControls/FormControls.module.css'
 
 type FormDataType = {
     email: string
@@ -16,7 +17,10 @@ type FormDataType = {
 const maxLength5 = maxLength(30)
 
 
-export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = ({handleSubmit}) => {
+export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = ({
+                                                                         handleSubmit,
+                                                                         error
+                                                                     }) => {
     return (
         <form onSubmit={handleSubmit}>
             <div>
@@ -32,10 +36,12 @@ export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = ({handleSubm
             <div>
                 <Field name="rememberMe" component="input" type={'checkbox'}/>remember me
             </div>
+
+            {error && <div className={s.errorMessage}>{error}</div>}
+
             <div>
                 <button>login</button>
             </div>
-
         </form>
     );
 }

@@ -23,7 +23,7 @@ export type UserProfile = {
     'lookingForAJob': boolean,
     'lookingForAJobDescription': string
     'fullName': string
-    'userId': number
+    'userId': number | null
     'photos': {
         'small': string | undefined
         'large': string | undefined
