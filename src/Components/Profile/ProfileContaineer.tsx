@@ -26,6 +26,10 @@ class ProfileContainer extends React.Component<ProfileType & WithRouterType> {
 
         if (!userID) {
             userID = this.props.authorizedUserId
+            if (!userID) {
+                // @ts-ignore
+                this.props.navigate('/login', {replace: true})
+            }
         }
 
         if (userID !== null) {

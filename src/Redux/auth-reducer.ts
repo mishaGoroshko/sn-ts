@@ -2,6 +2,7 @@ import {Dispatch} from 'redux'
 import {authAPI} from '../API/api';
 import {AppThunk} from './redux-store';
 import {stopSubmit} from 'redux-form';
+import {initializedSuccess} from './app-reducer';
 
 export type InitStateType = {
     id: number | null
@@ -37,7 +38,7 @@ export const setUserData = (id: number | null, email: string | null, login: stri
 
 
 export const getAuthUserDataTC = () => (dispatch: Dispatch) => {
-    authAPI.me()
+    return authAPI.me()
         .then(data => {
             if (data.resultCode === 0) {
                 let {id, email, login} = data.data

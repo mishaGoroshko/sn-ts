@@ -17,34 +17,33 @@ type FormDataType = {
 const maxLength5 = maxLength(30)
 
 
-export const LoginForm: React.FC<InjectedFormProps<FormDataType>> = ({
-                                                                         handleSubmit,
-                                                                         error
-                                                                     }) => {
-    return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <Field name="email" placeholder="email" type={'input'}
-                       component={Textarea}
-                       validate={[required, maxLength5]}/>
-            </div>
-            <div>
-                <Field name="password" placeholder="password" type={'password'}
-                       component={Textarea}
-                       validate={[required, maxLength5]}/>
-            </div>
-            <div>
-                <Field name="rememberMe" component="input" type={'checkbox'}/>remember me
-            </div>
+export const LoginForm: React.FC<InjectedFormProps<FormDataType>> =
+    ({handleSubmit, error}) => {
+        return (
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <Field name="email" placeholder="email" type={'input'}
+                           component={Textarea}
+                           validate={[required, maxLength5]}/>
+                </div>
+                <div>
+                    <Field name="password" placeholder="password" type={'password'}
+                           component={Textarea}
+                           validate={[required, maxLength5]}/>
+                </div>
+                <div>
+                    <Field name="rememberMe" component="input" type={'checkbox'}/>remember
+                    me
+                </div>
 
-            {error && <div className={s.errorMessage}>{error}</div>}
+                {error && <div className={s.errorMessage}>{error}</div>}
 
-            <div>
-                <button>login</button>
-            </div>
-        </form>
-    );
-}
+                <div>
+                    <button>login</button>
+                </div>
+            </form>
+        );
+    }
 
 
 export const LoginReduxForm = reduxForm<FormDataType>({form: 'login'})(LoginForm)
