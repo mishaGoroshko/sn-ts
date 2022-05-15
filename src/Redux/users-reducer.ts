@@ -1,6 +1,7 @@
 import {v1} from 'uuid';
 import {userAPI} from '../API/api';
 import {Dispatch} from 'redux';
+import {AppStateType} from './redux-store';
 
 export type UserType = {
     name: string
@@ -31,12 +32,18 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
         case 'FOLLOW':
             return {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: true} : el)
+                users: state.users.map(el => el.id === action.payload.userId ? {
+                    ...el,
+                    followed: true
+                } : el)
             }
         case 'UN-FOLLOW':
             return {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {...el, followed: false} : el)
+                users: state.users.map(el => el.id === action.payload.userId ? {
+                    ...el,
+                    followed: false
+                } : el)
             }
         case 'SET-USERS':
             return {...state, users: [...action.payload.users]}
@@ -73,11 +80,26 @@ export type UsersActionsType = followACType
     | toggleDisabledACType
 
 export const follow = (userId: string) => ({type: 'FOLLOW', payload: {userId},} as const)
-export const unfollow = (userId: string) => ({type: 'UN-FOLLOW', payload: {userId},} as const)
-export const setUsers = (users: Array<UserType>) => ({type: 'SET-USERS', payload: {users},} as const)
-export const setCurrentPage = (currentPage: number) => ({type: 'SET-PAGE-NUMBER', payload: {currentPage},} as const)
-export const setTotalCount = (totalCount: number) => ({type: 'SET-TOTAL-COUNT', payload: {totalCount},} as const)
-export const setPreloader = (isFetching: boolean) => ({type: 'SET-PRELOADER', payload: {isFetching},} as const)
+export const unfollow = (userId: string) => ({
+    type: 'UN-FOLLOW',
+    payload: {userId},
+} as const)
+export const setUsers = (users: Array<UserType>) => ({
+    type: 'SET-USERS',
+    payload: {users},
+} as const)
+export const setCurrentPage = (currentPage: number) => ({
+    type: 'SET-PAGE-NUMBER',
+    payload: {currentPage},
+} as const)
+export const setTotalCount = (totalCount: number) => ({
+    type: 'SET-TOTAL-COUNT',
+    payload: {totalCount},
+} as const)
+export const setPreloader = (isFetching: boolean) => ({
+    type: 'SET-PRELOADER',
+    payload: {isFetching},
+} as const)
 export const toggleDisabled = (userId: string, isDisabled: boolean) =>
     ({type: 'TOGGLE-DISABLED', payload: {userId, isDisabled}} as const)
 
@@ -113,3 +135,12 @@ export const deleteFollowTC = (userId: string) => (dispatch: Dispatch) => {
             data.resultCode === 0 && dispatch(unfollow(userId))
         })
 }
+
+//selectors
+export const getUsers = (state: AppStateType): Array<UserType> => state.usersPage.users
+export const getPageSize = (state: AppStateType): number => state.usersPage.pageSize
+export const getTotalCountUsers = (state: AppStateType): number => state.usersPage.totalCountUsers
+export const getCurrentPage = (state: AppStateType): number => state.usersPage.currentPage
+export const getIsFetching = (state: AppStateType): boolean => state.usersPage.isFetching
+export const getFollowArrayId = (state: AppStateType): Array<string> => state.usersPage.followArrayId
+

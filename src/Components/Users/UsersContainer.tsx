@@ -3,6 +3,11 @@ import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
 import {
     deleteFollowTC,
+    getCurrentPage, getFollowArrayId,
+    getIsFetching,
+    getPageSize,
+    getTotalCountUsers,
+    getUsers,
     getUsersTC,
     postFollowTC,
     toggleDisabled,
@@ -55,12 +60,12 @@ export type UsersType = MapStatePropsType & MapDispatchPropsType
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
-        users: state.usersPage.users,
-        pageSize: state.usersPage.pageSize,
-        totalCountUsers: state.usersPage.totalCountUsers,
-        currentPage: state.usersPage.currentPage,
-        isFetching: state.usersPage.isFetching,
-        followArrayId: state.usersPage.followArrayId,
+        users: getUsers(state),
+        pageSize: getPageSize(state),
+        totalCountUsers: getTotalCountUsers(state),
+        currentPage: getCurrentPage(state),
+        isFetching: getIsFetching(state),
+        followArrayId: getFollowArrayId(state),
     }
 }
 
