@@ -2,6 +2,7 @@ import {v1} from 'uuid';
 import {userAPI} from '../API/api';
 import {Dispatch} from 'redux';
 import {AppStateType} from './redux-store';
+import {createSelector} from 'reselect';
 
 export type UserType = {
     name: string
@@ -103,15 +104,15 @@ export const setPreloader = (isFetching: boolean) => ({
 export const toggleDisabled = (userId: string, isDisabled: boolean) =>
     ({type: 'TOGGLE-DISABLED', payload: {userId, isDisabled}} as const)
 
-export const getUsersTC = (currentPage: number, pageSize: number) => (dispatch: Dispatch) => {
+export const getUsersTC = (page: number, pageSize: number) => (dispatch: Dispatch) => {
     dispatch(setPreloader(true))
+    dispatch(setCurrentPage(page))
     userAPI
-        .getUsers(currentPage, pageSize)
+        .getUsers(page, pageSize)
         .then(data => {
                 dispatch(setPreloader(false))
                 dispatch(setUsers(data.items))
                 dispatch(setTotalCount(data.totalCount))
-                dispatch(setCurrentPage(currentPage))
             }
         )
 }
@@ -138,7 +139,16 @@ export const deleteFollowTC = (userId: string) => (dispatch: Dispatch) => {
 
 //selectors
 export const getUsers = (state: AppStateType): Array<UserType> => state.usersPage.users
+// export const selectUsersWithFilter = (state: AppStateType): Array<UserType> =>
+//     state.usersPage.users.filter(u => true)
+
+//reselect---------------------------------------------------
+export const reselectUsers = createSelector(getUsers, (users) => users.filter(u => true))
+//------------------------------------------------------------
+
 export const getPageSize = (state: AppStateType): number => state.usersPage.pageSize
+
+//selectors
 export const getTotalCountUsers = (state: AppStateType): number => state.usersPage.totalCountUsers
 export const getCurrentPage = (state: AppStateType): number => state.usersPage.currentPage
 export const getIsFetching = (state: AppStateType): boolean => state.usersPage.isFetching

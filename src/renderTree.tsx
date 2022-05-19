@@ -5,6 +5,10 @@ import App from './App';
 import {store} from './Redux/redux-store';
 import {Provider} from 'react-redux';
 
+setInterval(()=>{
+    store.dispatch({type: 'FAKE'})
+}, 1000)
+
 export const renderTree = () => {
     ReactDOM.render(
         <BrowserRouter>
