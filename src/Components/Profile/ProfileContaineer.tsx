@@ -17,9 +17,11 @@ import {
 } from 'react-router-dom';
 import {withAuthRedirect} from '../../hoc/withAuthRedirect';
 import {compose} from 'redux';
+import {Preloader} from '../common/Preloader/Preloader';
 
 
 class ProfileContainer extends React.Component<ProfileType & WithRouterType> {
+
     componentDidMount() {
         // @ts-ignore
         let userID: number | null = this.props.router.params['*'];
@@ -38,7 +40,13 @@ class ProfileContainer extends React.Component<ProfileType & WithRouterType> {
         }
     }
 
+
+
     render() {
+
+        if (!this.props.initialized) {
+            return <Preloader isFetching/>
+        }
         //@ts-ignore
         // if (!this.props.isAuth) this.props.router.navigate('/login', {replace: true})
 
@@ -54,6 +62,7 @@ type MapStatePropsType = {
     userProfile: UserProfile
     status: string
     authorizedUserId: number | null
+    initialized: boolean
 }
 
 type MapDispatchPropsType = {
@@ -68,7 +77,8 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
         userProfile: state.profilePage.userProfile,
         status: state.profilePage.status,
-        authorizedUserId: state.auth.id
+        authorizedUserId: state.auth.id,
+        initialized: state.profilePage.initialized
     }
 }
 

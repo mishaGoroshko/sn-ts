@@ -2,7 +2,6 @@ import {Dispatch} from 'redux'
 import {authAPI} from '../API/api';
 import {AppThunk} from './redux-store';
 import {stopSubmit} from 'redux-form';
-import {initializedSuccess} from './app-reducer';
 
 export type InitStateType = {
     id: number | null

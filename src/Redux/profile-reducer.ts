@@ -1,6 +1,7 @@
 import {v1} from 'uuid';
 import {Dispatch} from 'redux';
 import {profileAPI, userAPI} from '../API/api';
+import {initializedSuccess, InitializedSuccessAC} from './app-reducer';
 
 type PostType = {
     id: string
@@ -58,13 +59,15 @@ const initialState = {
         {id: v1(), message: 'Hello it\'s me ', likeCounting: 23},
     ] as Array<PostType>,
     userProfile: user2,
-    status: ''
+    status: '',
+    initialized: false
 }
 
 export type initialStateProfileType = {
     posts: Array<PostType>
     userProfile: UserProfile
     status: string
+    initialized: boolean
 }
 
 export const profileReducer = (state: initialStateProfileType = initialState, action: ProfileActionsType): initialStateProfileType => {
@@ -75,6 +78,8 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
             return {...state, userProfile: action.payload.userProfile}
         case 'SET-STATUS':
             return {...state, status: action.payload.status}
+        case 'INITIALIZED-PROFILE':
+            return {...state, initialized: true}
         default:
             return state
     }
@@ -84,6 +89,7 @@ export type ProfileActionsType = ReturnType<typeof addPostAC>
     | ReturnType<typeof setUserProfile>
     | ReturnType<typeof setStatus>
     | ReturnType<typeof addPostAC>
+    | ReturnType<typeof initializedProfile>
 
 export const addPostAC = (newPost: string) => ({
     type: 'ADD-POST',
@@ -95,11 +101,16 @@ export const setUserProfile = (userProfile: UserProfile) =>
 
 export const setStatus = (status: string) =>
     ({type: 'SET-STATUS', payload: {status}} as const)
+export const initializedProfile = () =>
+    ({type: 'INITIALIZED-PROFILE',} as const)
 
 
 export const getUserProfileTC = (userID: number) => (dispatch: Dispatch) =>
     userAPI.getUserForProfile(userID)
-        .then(data => dispatch(setUserProfile(data)))
+        .then(data => {
+            dispatch(setUserProfile(data))
+            dispatch(initializedProfile())
+        })
 
 export const getStatusTC = (userID: number) => (dispatch: Dispatch) =>
     profileAPI.getStatus(userID)

@@ -21,7 +21,9 @@ export const appReducer = (state: InitStateType = initState, action: AppActionsT
     }
 }
 
-export type AppActionsType = ReturnType<typeof initializedSuccess>
+export type AppActionsType = InitializedSuccessAC
+
+export type  InitializedSuccessAC = ReturnType<typeof initializedSuccess>
 
 export const initializedSuccess = () =>
     ({type: 'INITIALIZED-SUCCESS',} as const)

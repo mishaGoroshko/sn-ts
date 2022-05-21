@@ -3,7 +3,7 @@ import s from './ProfileInfo.module.css'
 import {UserProfile} from '../../../Redux/profile-reducer';
 import {Preloader} from '../../common/Preloader/Preloader';
 import userPhoto from '../../../Assets/images/userPhoto.png';
-import {ProfileStatusWithHooks} from '../ProfileStatusWithHooks';
+import {ProfileStatusWithHooks} from './ProfileStatus/ProfileStatusWithHooks';
 
 
 type ProfileInfoType = {
@@ -12,7 +12,7 @@ type ProfileInfoType = {
     updateStatusTC: (status: string) => void
 }
 
-export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile, status, updateStatusTC}) => {
+export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile, ...props}) => {
     if (!userProfile) {
         return <Preloader isFetching={true}/>
     }
@@ -25,7 +25,7 @@ export const ProfileInfo: React.FC<ProfileInfoType> = ({userProfile, status, upd
                     alt="ava"/>
                 <div>{userProfile.fullName}</div>
 
-                <ProfileStatusWithHooks status={status} updateStatusTC={updateStatusTC}/>
+                <ProfileStatusWithHooks {...props} />
             </div>
         </div>
     )
