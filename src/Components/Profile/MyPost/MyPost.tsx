@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
 import s from './MyPost.module.css';
 import Post from './Post/Post';
 import {MyPostType} from './MyPostContainer';
@@ -10,15 +10,10 @@ type FormDataType = {
     newPost: string
 }
 
-export const MyPost: React.FC<MyPostType> = ({
-                                                 addPost,
-                                                 profilePage,
-                                                 ...props
-                                             }) => {
+export const MyPost = React.memo<MyPostType>(({addPost, profilePage, ...props}) => {
+    console.log('RENDER MyPost')
 
     let postsElement = profilePage.posts.map(post => <Post key={post.id} {...post}/>)
-    // let newPostElement = React.createRef<HTMLTextAreaElement>()
-    // let addPost = () => {if (newPostElement.current) {props.addPost(newPostElement.current.value)}}
 
     let addPostHandler = (formData: FormDataType) => {
         addPost(formData.newPost)
@@ -36,7 +31,7 @@ export const MyPost: React.FC<MyPostType> = ({
             </div>
         </div>
     );
-}
+})
 
 const maxLength5 = maxLength(3)
 
