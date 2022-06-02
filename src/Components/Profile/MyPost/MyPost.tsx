@@ -13,7 +13,9 @@ type FormDataType = {
 export const MyPost = React.memo<MyPostType>(({addPost, profilePage, ...props}) => {
     console.log('RENDER MyPost')
 
-    let postsElement = profilePage.posts.map(post => <Post key={post.id} {...post}/>)
+    let postsElement = [...profilePage.posts]
+        .reverse()
+        .map(post => <Post key={post.id} {...post}/>)
 
     let addPostHandler = (formData: FormDataType) => {
         addPost(formData.newPost)

@@ -3,7 +3,7 @@ import {Dispatch} from 'redux';
 import {profileAPI, userAPI} from '../API/api';
 import {initializedSuccess, InitializedSuccessAC} from './app-reducer';
 
-type PostType = {
+export type PostType = {
     id: string
     message: string
     likeCounting: number
@@ -73,13 +73,22 @@ export type initialStateProfileType = {
 export const profileReducer = (state: initialStateProfileType = initialState, action: ProfileActionsType): initialStateProfileType => {
     switch (action.type) {
         case 'ADD-POST':
-            return {...state, posts: [...state.posts, {id: v1(), message: action.payload.newPost, likeCounting: 0}]}
+            return {...state,
+                posts: [...state.posts, {
+                    id: v1(),
+                    message: action.payload.newPost,
+                    likeCounting: 0
+                }]
+            }
         case 'SET-USER-PROFILE':
             return {...state, userProfile: action.payload.userProfile}
         case 'SET-STATUS':
             return {...state, status: action.payload.status}
         case 'INITIALIZED-PROFILE':
             return {...state, initialized: true}
+        case 'DELETE-POST':
+            return {...state, posts: state.posts
+                    .filter(p => p.id !== action.payload.id)}
         default:
             return state
     }
@@ -90,21 +99,21 @@ export type ProfileActionsType = ReturnType<typeof addPostAC>
     | ReturnType<typeof setStatus>
     | ReturnType<typeof addPostAC>
     | ReturnType<typeof initializedProfile>
+    | ReturnType<typeof deletePostAC>
 
-export const addPostAC = (newPost: string) => ({
-    type: 'ADD-POST',
-    payload: {newPost}
-} as const)
-
+// action
+export const addPostAC = (newPost: string) =>
+    ({type: 'ADD-POST', payload: {newPost}} as const)
+export const deletePostAC = (id: string) =>
+    ({type: 'DELETE-POST', payload: {id}} as const)
 export const setUserProfile = (userProfile: UserProfile) =>
     ({type: 'SET-USER-PROFILE', payload: {userProfile}} as const)
-
 export const setStatus = (status: string) =>
     ({type: 'SET-STATUS', payload: {status}} as const)
 export const initializedProfile = () =>
     ({type: 'INITIALIZED-PROFILE',} as const)
 
-
+// thunk
 export const getUserProfileTC = (userID: number) => (dispatch: Dispatch) =>
     userAPI.getUserForProfile(userID)
         .then(data => {
