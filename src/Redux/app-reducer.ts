@@ -29,9 +29,9 @@ export const initializedSuccess = () =>
     ({type: 'INITIALIZED-SUCCESS',} as const)
 
 
-export const initializedApp = (): AppThunk => (dispatch) => {
-    dispatch(getAuthUserDataTC())
-        .then(res => dispatch(initializedSuccess()))
+export const initializedApp = (): AppThunk => async (dispatch) => {
+    let res = await dispatch(getAuthUserDataTC())
+    dispatch(initializedSuccess())
 
 
 }

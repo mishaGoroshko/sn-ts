@@ -2,6 +2,8 @@ import {v1} from 'uuid';
 import {Dispatch} from 'redux';
 import {profileAPI, userAPI} from '../API/api';
 import {initializedSuccess, InitializedSuccessAC} from './app-reducer';
+import {AppThunk} from './redux-store';
+import {RESULTS_CODE_SUCCESS} from '../constants';
 
 export type PostType = {
     id: string
@@ -73,7 +75,8 @@ export type initialStateProfileType = {
 export const profileReducer = (state: initialStateProfileType = initialState, action: ProfileActionsType): initialStateProfileType => {
     switch (action.type) {
         case 'ADD-POST':
-            return {...state,
+            return {
+                ...state,
                 posts: [...state.posts, {
                     id: v1(),
                     message: action.payload.newPost,
@@ -87,8 +90,10 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
         case 'INITIALIZED-PROFILE':
             return {...state, initialized: true}
         case 'DELETE-POST':
-            return {...state, posts: state.posts
-                    .filter(p => p.id !== action.payload.id)}
+            return {
+                ...state, posts: state.posts
+                    .filter(p => p.id !== action.payload.id)
+            }
         default:
             return state
     }
@@ -114,21 +119,18 @@ export const initializedProfile = () =>
     ({type: 'INITIALIZED-PROFILE',} as const)
 
 // thunk
-export const getUserProfileTC = (userID: number) => (dispatch: Dispatch) =>
-    userAPI.getUserForProfile(userID)
-        .then(data => {
-            dispatch(setUserProfile(data))
-            dispatch(initializedProfile())
-        })
-
-export const getStatusTC = (userID: number) => (dispatch: Dispatch) =>
-    profileAPI.getStatus(userID)
-        .then(data => dispatch(setStatus(data)))
-
-export const updateStatusTC = (status: string) => (dispatch: Dispatch) =>
-    profileAPI.updateStatus(status)
-        .then(data => {
-            if (data.resultCode === 0) {
-                dispatch(setStatus(status))
-            }
-        })
+export const getUserProfileTC = (userID: number): AppThunk => async (dispatch: Dispatch) => {
+    let data = await userAPI.getUserForProfile(userID)
+    dispatch(setUserProfile(data))
+    dispatch(initializedProfile())
+}
+export const getStatusTC = (userID: number): AppThunk => async (dispatch: Dispatch) => {
+    let data = await profileAPI.getStatus(userID)
+    dispatch(setStatus(data))
+}
+export const updateStatusTC = (status: string): AppThunk => async (dispatch: Dispatch) => {
+    let data = await profileAPI.updateStatus(status)
+    if (data.resultCode === RESULTS_CODE_SUCCESS) {
+        dispatch(setStatus(status))
+    }
+}

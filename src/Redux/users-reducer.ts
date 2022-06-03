@@ -1,8 +1,9 @@
 import {v1} from 'uuid';
 import {userAPI} from '../API/api';
 import {Dispatch} from 'redux';
-import {AppStateType} from './redux-store';
+import {AppStateType, AppThunk} from './redux-store';
 import {createSelector} from 'reselect';
+import {updateObjectInArray} from '../utils/validators/helpers/updateObjectInArray';
 
 export type UserType = {
     name: string
@@ -33,18 +34,14 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
         case 'FOLLOW':
             return {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {
-                    ...el,
-                    followed: true
-                } : el)
+                users: updateObjectInArray(state.users, action.payload.userId,
+            'id', {followed: true})
             }
         case 'UN-FOLLOW':
             return {
                 ...state,
-                users: state.users.map(el => el.id === action.payload.userId ? {
-                    ...el,
-                    followed: false
-                } : el)
+                users: updateObjectInArray(state.users, action.payload.userId,
+                    'id', {followed: false})
             }
         case 'SET-USERS':
             return {...state, users: [...action.payload.users]}
@@ -80,11 +77,10 @@ export type UsersActionsType = followACType
     | setPreloaderACType
     | toggleDisabledACType
 
-export const follow = (userId: string) => ({type: 'FOLLOW', payload: {userId},} as const)
-export const unfollow = (userId: string) => ({
-    type: 'UN-FOLLOW',
-    payload: {userId},
-} as const)
+export const follow = (userId: string) =>
+    ({type: 'FOLLOW', payload: {userId},} as const)
+export const unfollow = (userId: string) =>
+    ({type: 'UN-FOLLOW', payload: {userId},} as const)
 export const setUsers = (users: Array<UserType>) => ({
     type: 'SET-USERS',
     payload: {users},
@@ -104,38 +100,34 @@ export const setPreloader = (isFetching: boolean) => ({
 export const toggleDisabled = (userId: string, isDisabled: boolean) =>
     ({type: 'TOGGLE-DISABLED', payload: {userId, isDisabled}} as const)
 
-export const getUsersTC = (page: number, pageSize: number) => (dispatch: Dispatch) => {
+export const getUsersTC = (page: number, pageSize: number): AppThunk => async dispatch => {
     dispatch(setPreloader(true))
     dispatch(setCurrentPage(page))
-    userAPI
-        .getUsers(page, pageSize)
-        .then(data => {
-                dispatch(setPreloader(false))
-                dispatch(setUsers(data.items))
-                dispatch(setTotalCount(data.totalCount))
-            }
-        )
+
+    let data = await userAPI.getUsers(page, pageSize)
+
+    dispatch(setPreloader(false))
+    dispatch(setUsers(data.items))
+    dispatch(setTotalCount(data.totalCount))
 }
 
-export const postFollowTC = (userId: string) => (dispatch: Dispatch) => {
+
+const followUnfollowFlow = async (dispatch: Dispatch, userId: string, apiMethod: any, actionCreater: (userId: string) => followACType | unfollowACType) => {
     dispatch(toggleDisabled(userId, true))
-    userAPI
-        .postFollow(userId)
-        .then(data => {
-            dispatch(toggleDisabled(userId, false))
-            data.resultCode === 0 && dispatch(follow(userId))
-        })
+
+    let data = await apiMethod(userId)
+
+    dispatch(toggleDisabled(userId, false))
+    data.resultCode === 0 && dispatch(actionCreater(userId))
 }
 
-export const deleteFollowTC = (userId: string) => (dispatch: Dispatch) => {
-    dispatch(toggleDisabled(userId, true))
-    userAPI
-        .deleteFollow(userId)
-        .then(data => {
-            dispatch(toggleDisabled(userId, false))
-            data.resultCode === 0 && dispatch(unfollow(userId))
-        })
-}
+export const postFollowTC = (userId: string): AppThunk => dispatch =>
+    followUnfollowFlow(dispatch, userId, userAPI.postFollow, follow)
+
+
+export const deleteFollowTC = (userId: string): AppThunk => dispatch =>
+    followUnfollowFlow(dispatch, userId, userAPI.deleteFollow, unfollow)
+
 
 //selectors
 export const getUsers = (state: AppStateType): Array<UserType> => state.usersPage.users

@@ -2,6 +2,7 @@ import {Dispatch} from 'redux'
 import {authAPI} from '../API/api';
 import {AppThunk} from './redux-store';
 import {stopSubmit} from 'redux-form';
+import {RESULTS_CODE_SUCCESS} from '../constants';
 
 export type InitStateType = {
     id: number | null
@@ -36,26 +37,23 @@ export const setUserData = (id: number | null, email: string | null, login: stri
 }
 
 
-export const getAuthUserDataTC = () => (dispatch: Dispatch) => {
-    return authAPI.me()
-        .then(data => {
-            if (data.resultCode === 0) {
-                let {id, email, login} = data.data
-                dispatch(setUserData(id, email, login, true))
-            }
-        })
+export const getAuthUserDataTC = (): AppThunk => async (dispatch: Dispatch) => {
+    let data = await authAPI.me()
+    if (data.resultCode === RESULTS_CODE_SUCCESS) {
+        let {id, email, login} = data.data
+        dispatch(setUserData(id, email, login, true))
+    }
 }
 
 export const loginAuthTC = (email: string, password: string, rememberMe: boolean): AppThunk => async dispatch => {
     const res = await authAPI.login(email, password, rememberMe)
-    if (res.resultCode === 0) {
+    if (res.resultCode === RESULTS_CODE_SUCCESS) {
         dispatch(getAuthUserDataTC())
     } else {
         let message = res.messages.length > 0 ? res.messages[0] : 'some error'
         dispatch(stopSubmit('login', {_error: message}))
     }
 }
-
 
 export const logoutAuthTC = (): AppThunk => async dispatch => {
     const res = await authAPI.logout()
