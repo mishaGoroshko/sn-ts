@@ -23,15 +23,20 @@ class UsersContainer extends React.Component<UsersType> {
     // constructor(props: UsersType) {
     //     super(props);
     // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
+
     componentDidMount() {
-        this.props.getUsersTC(this.props.currentPage, this.props.pageSize)
+        let {currentPage, pageSize, getUsersTC} = this.props
+
+        getUsersTC(currentPage, pageSize)
     }
 
-    onPageChanged = (pageNumber: number) =>
-        this.props.getUsersTC(pageNumber, this.props.pageSize)
+    onPageChanged = (pageNumber: number) => {
+        let {pageSize, getUsersTC} = this.props
+
+        getUsersTC(pageNumber, pageSize)
+    }
 
     render() {
-        console.log('UsersContainer')
         return (
             <>
                 <Preloader isFetching={this.props.isFetching}/>
@@ -60,7 +65,6 @@ type MapDispatchPropsType = {
 export type UsersType = MapStatePropsType & MapDispatchPropsType
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => {
-    console.log('mapStateToProps')
     return {
         users: getUsers(state),
         pageSize: getPageSize(state),

@@ -1,8 +1,8 @@
 import React from 'react';
 import s from './Users.module.css';
-import userPhoto from '../../Assets/images/userPhoto.png';
 import {UserType} from '../../Redux/users-reducer';
-import {NavLink} from 'react-router-dom';
+import {Pagination} from '../common/Pagination/Pagination';
+import {User} from './User/User';
 
 type UsersType = {
     totalCountUsers: number
@@ -21,47 +21,18 @@ export const Users: React.FC<UsersType> = (
         onPageChanged, users, followArrayId, postFollowTC, deleteFollowTC
     }) => {
 
-    let totalPages = Math.ceil(totalCountUsers / pageSize)
-
-    let pages = [...Array(totalPages)].map((_, i) => i + 1)
-
     return (
         <div className={s.header}>
-            <div>
-                {pages.map((p, i) => {
-                    return <span key={i}
-                                 className={p === currentPage ? s.active : s.item}
-                                 onClick={() => onPageChanged(p)}>{p}</span>
-                })}
-            </div>
-            {users.map(u => {
-                return (
-                    <div key={u.id} className={s.block}>
-                        <div className={s.blockAva}>
-                            <NavLink to={`/profile/${u.id}`}>
-                                <img
-                                    src={u.photos.small !== null ? u.photos.small : userPhoto}
-                                    className={s.image} alt="users photo"/>
-                            </NavLink>
-                            {u.followed
-                                ? <button disabled={followArrayId.some(el => el === u.id)}
-                                          onClick={() => deleteFollowTC(u.id)}>unfollow</button>
-                                : <button disabled={followArrayId.some(el => el === u.id)}
-                                          onClick={() => postFollowTC(u.id)}>follow</button>}
-                        </div>
-                        <div className={s.allInfo}>
-                            <div className={s.nameStatus}>
-                                <div>{u.name}</div>
-                                <div>{u.status}</div>
-                            </div>
-                            <div className={s.location}>
-                                <div>{'u.location.country'}</div>
-                                <div>{'u.location.city'}</div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            })}
+            <Pagination totalCountUsers={totalCountUsers}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChanged={onPageChanged}/>
+
+            {users.map(u => <User key={u.id}
+                                  user={u}
+                                  postFollowTC={postFollowTC}
+                                  followArrayId={followArrayId}
+                                  deleteFollowTC={deleteFollowTC}/>)}
         </div>
     );
 }
