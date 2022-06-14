@@ -7,28 +7,10 @@ let instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0/',
     headers: {'API-KEY': 'f3f54432-d8c8-49d7-98bb-7ebfd06f7be2'}
 })
-//@ts-ignore
-const resData = res => res.data
-
 type userAPIType = {
     items: UserType[]
     'totalCount': number
     'error': string
-}
-type followAPIType = {
-    resultCode: number
-    messages: Array<string>
-    data: {}
-}
-type authAPIType = {
-    fieldsErrors: []
-    resultCode: number
-    messages: Array<string>
-    data: {
-        id: number
-        email: string
-        login: string
-    }
 }
 
 type responseAPIType<D = {}> = {

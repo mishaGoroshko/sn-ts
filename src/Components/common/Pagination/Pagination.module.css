@@ -1,10 +1,25 @@
+.wrapper {
+    margin: 10px 100px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.arrow {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
 .item {
     color: white;
     text-decoration: none;
+    cursor: pointer;
 }
 
 .active {
     color: gold;
     text-decoration: none;
     font-weight: bold;
+    cursor: not-allowed;
 }

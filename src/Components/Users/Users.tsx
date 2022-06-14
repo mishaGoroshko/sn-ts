@@ -23,10 +23,11 @@ export const Users: React.FC<UsersType> = (
 
     return (
         <div className={s.header}>
-            <Pagination totalCountUsers={totalCountUsers}
+            <Pagination totalItemsCount={totalCountUsers}
                         pageSize={pageSize}
                         currentPage={currentPage}
-                        onPageChanged={onPageChanged}/>
+                        onPageChanged={onPageChanged}
+                        portionSize={10}/>
 
             {users.map(u => <User key={u.id}
                                   user={u}
