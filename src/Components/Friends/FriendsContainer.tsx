@@ -22,4 +22,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     return {}
 }
 
-export const FriendsContainer = connect(mapStateToProps, mapDispatchToProps)(Friends)
+export default connect(mapStateToProps, mapDispatchToProps)(Friends)

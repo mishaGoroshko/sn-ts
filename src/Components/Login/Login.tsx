@@ -49,7 +49,7 @@ export const LoginForm: React.FC<InjectedFormProps<FormDataType>> =
 export const LoginReduxForm = reduxForm<FormDataType>({form: 'login'})(LoginForm)
 
 
-export const Login: React.FC<LoginType> = ({isAuth, loginAuthTC}) => {
+const Login: React.FC<LoginType> = ({isAuth, loginAuthTC}) => {
     // const dispatch = useDispatch()
     // const isAuth = useSelector<AppStateType, boolean>(state => state.auth.isAuth)
 
@@ -81,4 +81,4 @@ type LoginType = MapStatePropsType & MapDispatchPropsType
 const mapStateToProps = (state: AppStateType): MapStatePropsType =>
     ({isAuth: state.auth.isAuth})
 
-export const LoginConnect = connect(mapStateToProps, {loginAuthTC})(Login)
+export default connect(mapStateToProps, {loginAuthTC})(Login)

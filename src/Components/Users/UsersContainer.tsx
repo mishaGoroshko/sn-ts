@@ -75,7 +75,7 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     }
 }
 
-export const UsersConnect = compose<ComponentType>(connect(mapStateToProps,
+export default compose<ComponentType>(connect(mapStateToProps,
         {toggleDisabled, getUsersTC, postFollowTC, deleteFollowTC}),
     withAuthRedirect)(UsersContainer)
 
