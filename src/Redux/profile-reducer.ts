@@ -1,6 +1,6 @@
 import {v1} from 'uuid';
 import {Dispatch} from 'redux';
-import {profileAPI, userAPI} from '../API/api';
+import {photosType, profileAPI, ProfileUpdateProperties, userAPI} from '../API/api';
 import {initializedSuccess, InitializedSuccessAC} from './app-reducer';
 import {AppThunk} from './redux-store';
 import {RESULTS_CODE_SUCCESS} from '../constants';
@@ -29,7 +29,7 @@ export type UserProfile = {
     'userId': number | null
     'photos': {
         'small': string | undefined
-        'large': string | undefined
+        'large': any
     }
 }
 
@@ -51,7 +51,7 @@ const user2 = {
     'userId': 2,
     'photos': {
         'small': 'https://social-network.samuraijs.com/activecontent/images/users/2/user-small.jpg?v=0',
-        'large': 'https://social-network.samuraijs.com/activecontent/images/users/2/user.jpg?v=0'
+        'large': 'https://social-network.samuraijs.com/activecontent/images/users/2/user.jpg?v=0',
     }
 }
 
@@ -70,6 +70,7 @@ export type initialStateProfileType = {
     userProfile: UserProfile
     status: string
     initialized: boolean
+
 }
 
 export const profileReducer = (state: initialStateProfileType = initialState, action: ProfileActionsType): initialStateProfileType => {
@@ -94,6 +95,16 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
                 ...state, posts: state.posts
                     .filter(p => p.id !== action.payload.id)
             }
+        case 'SAVE-PHOTO-SUCCESS':
+            return {
+                ...state,
+                userProfile: {
+                    ...state.userProfile,
+                    photos: action.payload
+                }
+            }
+        case 'UPDATE-PROFILE-SUCCESS':
+            return state
         default:
             return state
     }
@@ -105,6 +116,8 @@ export type ProfileActionsType = ReturnType<typeof addPostAC>
     | ReturnType<typeof addPostAC>
     | ReturnType<typeof initializedProfile>
     | ReturnType<typeof deletePostAC>
+    | ReturnType<typeof savePhotoSuccess>
+    | ReturnType<typeof updateProfileSuccess>
 
 // action
 export const addPostAC = (newPost: string) =>
@@ -117,20 +130,39 @@ export const setStatus = (status: string) =>
     ({type: 'SET-STATUS', payload: {status}} as const)
 export const initializedProfile = () =>
     ({type: 'INITIALIZED-PROFILE',} as const)
+export const savePhotoSuccess = (photos: { small: string, large: File }) =>
+    ({type: 'SAVE-PHOTO-SUCCESS', payload: photos,} as const)
+export const updateProfileSuccess = (payload: any) =>
+    ({type: 'UPDATE-PROFILE-SUCCESS', payload,} as const)
 
 // thunk
-export const getUserProfileTC = (userID: number): AppThunk => async (dispatch: Dispatch) => {
+export const getUserProfileTC = (userID: number): AppThunk => async dispatch => {
     let data = await userAPI.getUserForProfile(userID)
     dispatch(setUserProfile(data))
     dispatch(initializedProfile())
 }
-export const getStatusTC = (userID: number): AppThunk => async (dispatch: Dispatch) => {
+export const getStatusTC = (userID: number): AppThunk => async dispatch => {
     let data = await profileAPI.getStatus(userID)
     dispatch(setStatus(data))
 }
-export const updateStatusTC = (status: string): AppThunk => async (dispatch: Dispatch) => {
+export const updateStatusTC = (status: string): AppThunk => async dispatch => {
     let data = await profileAPI.updateStatus(status)
     if (data.resultCode === RESULTS_CODE_SUCCESS) {
         dispatch(setStatus(status))
     }
 }
+export const updateProfileTC = (payload: ProfileUpdateProperties): AppThunk => async (dispatch, getState) => {
+    const userId = getState().auth.id
+    let data = await profileAPI.updateProfile(payload)
+    if (data.resultCode === RESULTS_CODE_SUCCESS) {
+        dispatch(getUserProfileTC(userId!))
+    }
+}
+
+export const savePhoto = (photoFile: File): AppThunk => async dispatch => {
+    let data = await profileAPI.savePhoto(photoFile)
+    if (data.resultCode === RESULTS_CODE_SUCCESS) {
+        dispatch(savePhotoSuccess(data.data.photos))
+    }
+}
+

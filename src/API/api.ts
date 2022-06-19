@@ -19,6 +19,27 @@ type responseAPIType<D = {}> = {
     messages: Array<string>
     data: D
 }
+export type photosType = {
+    photos: { small: string, large: File }
+}
+
+export type ProfileUpdateProperties = {
+    // userId: number
+    lookingForAJob: boolean
+    lookingForAJobDescription: string
+    fullName: string
+    AboutMe: string;
+    contacts?: {
+        github: string | null
+        vk: string | null
+        facebook: string | null
+        instagram: string | null
+        twitter: string | null
+        website: string | null
+        youtube: string | null
+        mainLink: string | null
+    }
+}
 
 
 export const userAPI = {
@@ -52,6 +73,25 @@ export const profileAPI = {
     updateStatus: (status: string) => instance
         .put<responseAPIType>(`profile/status`, {status})
         .then(res => res.data),
+
+    updateProfile: (payload: ProfileUpdateProperties) => instance
+        .put<responseAPIType>(`profile`, payload)
+        .then(res => res.data),
+
+    savePhoto: (photoFile: File) => {
+        let formData = new FormData();
+        formData.append('image', photoFile);
+        return instance
+            .put<responseAPIType<photosType>>
+            (`profile/photo`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(res => res.data)
+    }
+
+
 }
 
 export const authAPI = {
