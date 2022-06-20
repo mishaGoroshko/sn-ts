@@ -1,5 +1,6 @@
 import React from 'react';
-import {FormikErrors, FormikProps, useFormik} from 'formik';
+import {FormikProps, useFormik} from 'formik';
+import * as Yup from 'yup';
 import {updateProfileTC, UserProfile} from '../../../../Redux/profile-reducer';
 import {useAppDispatch} from '../../../../Redux/redux-store';
 import {ProfileUpdateProperties} from '../../../../API/api';
@@ -20,45 +21,56 @@ type FormValues = ProfileUpdateProperties
 export const ProfileDataForm: React.FC<ProfileDataFormType
     & Partial<FormikProps<FormValues>>> = ({userProfile, setEditMode}) => {
     const dispatch = useAppDispatch()
-    const validate = (values: FormValues) => {
-        const errors: FormikErrors<FormValues> = {};
-        if (!values.fullName) {
-            errors.fullName = 'Required';
-        } else if (values.fullName.length > 15) {
-            errors.fullName = 'Must be 15 characters or less';
-        }
-
-        if (!values.AboutMe) {
-            errors.AboutMe = 'Required';
-        } else if (values.AboutMe.length > 20) {
-            errors.AboutMe = 'Must be 20 characters or less';
-        }
-
-        if (!values.lookingForAJobDescription) {
-            errors.lookingForAJobDescription = 'Required';
-        } else if (values.lookingForAJobDescription.length > 20) {
-            errors.lookingForAJobDescription = 'Must be 20 characters or less';
-        }
-
-        // if (!values.email) {
-        //     errors.email = 'Required';
-        // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        //     errors.email = 'Invalid email address';
-        // }
-
-        return errors;
-    };
 
     const formik = useFormik({
         initialValues: {
             fullName: userProfile.fullName,
-            AboutMe: userProfile.aboutMe,
+            aboutMe: userProfile.aboutMe,
             lookingForAJob: userProfile.lookingForAJob,
             lookingForAJobDescription: userProfile.lookingForAJobDescription,
             contacts: userProfile.contacts
         },
-        validate,
-        onSubmit: values => {
+
+        validationSchema: Yup.object().shape({
+            fullName: Yup.string()
+                .min(3, 'Must be 3 characters or more')
+                .required('Required'),
+            aboutMe: Yup.string()
+                .min(3, 'Must be 3 characters or more')
+                .required('Required'),
+            lookingForAJob: Yup.boolean()
+                .required('Required'),
+            lookingForAJobDescription: Yup.string()
+                .min(3, 'Must be 3 characters or more')
+                .required('Required'),
+            contacts: Yup.object().shape({
+                github: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+                vk: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+                facebook: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+                instagram: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+                twitter: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+                website: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+                youtube: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+                mainLink: Yup.string()
+                    .url('must be a url')
+                    .nullable(),
+            })
+        }),
+        onSubmit: (values, {setSubmitting}) => {
             // @ts-ignore
             dispatch(updateProfileTC(values))//  need to fix with types
             setEditMode(false)
@@ -66,6 +78,12 @@ export const ProfileDataForm: React.FC<ProfileDataFormType
     });
 
     const backToProfileHandle = () => setEditMode(false)
+
+    const editHandle = (c: keyof typeof userProfile.contacts) => {
+        if(formik.touched.contacts && formik.touched.contacts[c] && formik.errors.contacts){
+            return formik.errors.contacts[c] ? <div>{formik.errors.contacts[c]}</div> : null
+        }else return null
+    }
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -80,12 +98,12 @@ export const ProfileDataForm: React.FC<ProfileDataFormType
             ) : null}
             <div><b>aboutMe</b></div>
             <input
-                id="AboutMe"
+                id="aboutMe"
                 type="text"
-                {...formik.getFieldProps('AboutMe')}
+                {...formik.getFieldProps('aboutMe')}
             />
-            {formik.touched.AboutMe && formik.errors.AboutMe ? (
-                <div>{formik.errors.AboutMe}</div>
+            {formik.touched.aboutMe && formik.errors.aboutMe ? (
+                <div>{formik.errors.aboutMe}</div>
             ) : null}
 
             <div><b>lookingForAJob:</b></div>
@@ -117,12 +135,11 @@ export const ProfileDataForm: React.FC<ProfileDataFormType
                     type="text"
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    //@ts-ignore
-                    value={formik.values.contacts[c]}
+                    value={formik.values.contacts[c as keyof typeof userProfile.contacts] || ''}
                 />
-                    {/*{//@ts-ignore*/}
-                    {/*    formik.touched.contacts[c] && formik.errors.contacts[c] ? (<div>{formik.errors.contacts[c]}</div>) : null}*/}
-                </div>)}
+                    {editHandle(c as keyof typeof userProfile.contacts)}
+                </div>
+            )}
             </div>
 
             <button type="submit">Save</button>

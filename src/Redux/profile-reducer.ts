@@ -1,7 +1,5 @@
 import {v1} from 'uuid';
-import {Dispatch} from 'redux';
-import {photosType, profileAPI, ProfileUpdateProperties, userAPI} from '../API/api';
-import {initializedSuccess, InitializedSuccessAC} from './app-reducer';
+import {profileAPI, ProfileUpdateProperties, userAPI} from '../API/api';
 import {AppThunk} from './redux-store';
 import {RESULTS_CODE_SUCCESS} from '../constants';
 
@@ -156,6 +154,8 @@ export const updateProfileTC = (payload: ProfileUpdateProperties): AppThunk => a
     let data = await profileAPI.updateProfile(payload)
     if (data.resultCode === RESULTS_CODE_SUCCESS) {
         dispatch(getUserProfileTC(userId!))
+    } else {
+
     }
 }
 
