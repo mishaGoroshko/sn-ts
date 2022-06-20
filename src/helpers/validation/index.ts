@@ -1,0 +1,1 @@
+export { validationUpdateDataProfile } from './inputValidators';

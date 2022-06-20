@@ -6,6 +6,7 @@ import userPhoto from '../../../Assets/images/userPhoto.png';
 import {ProfileStatusWithHooks} from './ProfileStatus/ProfileStatusWithHooks';
 import {ProfileData} from './ProfileData/ProfileData';
 import {ProfileDataForm} from './ProfileDataForm/ProfileDataForm';
+import {ProfileUpdateProperties} from '../../../API/api';
 
 
 type ProfileInfoType = {
@@ -14,6 +15,7 @@ type ProfileInfoType = {
     updateStatusTC: (status: string) => void
     isOwner: boolean
     savePhoto: (photoFile: File) => void
+    updateProfileTC: (payload: ProfileUpdateProperties) => void
 }
 
 export const ProfileInfo: React.FC<ProfileInfoType> = ({
@@ -40,7 +42,7 @@ export const ProfileInfo: React.FC<ProfileInfoType> = ({
                 {isOwner && <input type={'file'} onChange={addFileHandle}/>}
 
                 {editMode
-                    ? <ProfileDataForm  userProfile={userProfile} setEditMode={setEditMode}/>
+                    ? <ProfileDataForm  userProfile={userProfile} setEditMode={setEditMode} {...props}/>
                     : <ProfileData userProfile={userProfile}
                                    isOwner={isOwner}
                                    setEditMode={setEditMode}/>}

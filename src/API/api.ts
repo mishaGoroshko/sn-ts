@@ -28,7 +28,7 @@ export type ProfileUpdateProperties = {
     lookingForAJob: boolean
     lookingForAJobDescription: string
     fullName: string
-    AboutMe: string;
+    aboutMe: string;
     contacts?: {
         github: string | null
         vk: string | null
@@ -99,13 +99,23 @@ export const authAPI = {
         .get<responseAPIType<{ id: number, email: string, login: string }>>(`auth/me`)
         .then(res => res.data),
 
-    login: (email: string, password: string, rememberMe: boolean) => instance
+    login: (email: string, password: string, rememberMe: boolean, captcha?: string) => instance
         .post<responseAPIType<{ userId: number }>>
-        (`auth/login`, {email, password, rememberMe})
+        (`auth/login`, {email, password, rememberMe, captcha})
         .then(res => res.data),
 
     logout: () => instance
         .delete<responseAPIType>(`auth/login`)
+        .then(res => res.data),
+}
+
+type ResponseCaptchaType = {
+        url: string
+}
+
+export const securityAPI = {
+    getCaptcha: () => instance
+        .get<ResponseCaptchaType>(`security/get-captcha-url`)
         .then(res => res.data),
 }
 

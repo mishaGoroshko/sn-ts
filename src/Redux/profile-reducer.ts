@@ -101,8 +101,6 @@ export const profileReducer = (state: initialStateProfileType = initialState, ac
                     photos: action.payload
                 }
             }
-        case 'UPDATE-PROFILE-SUCCESS':
-            return state
         default:
             return state
     }
@@ -154,8 +152,6 @@ export const updateProfileTC = (payload: ProfileUpdateProperties): AppThunk => a
     let data = await profileAPI.updateProfile(payload)
     if (data.resultCode === RESULTS_CODE_SUCCESS) {
         dispatch(getUserProfileTC(userId!))
-    } else {
-
     }
 }
 

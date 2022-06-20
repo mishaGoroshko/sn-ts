@@ -1,26 +1,16 @@
 import React from 'react';
 import {FormikProps, useFormik} from 'formik';
-import * as Yup from 'yup';
-import {updateProfileTC, UserProfile} from '../../../../Redux/profile-reducer';
-import {useAppDispatch} from '../../../../Redux/redux-store';
+import {UserProfile} from '../../../../Redux/profile-reducer';
 import {ProfileUpdateProperties} from '../../../../API/api';
+import {validationUpdateDataProfile} from '../../../../helpers';
 
 type ProfileDataFormType = {
     userProfile: UserProfile
     setEditMode: (editMode: boolean) => void
+    updateProfileTC: (payload: ProfileUpdateProperties) => void
 }
 
-type FormValues = ProfileUpdateProperties
-//     {
-//     fullName: string;
-//     AboutMe: string;
-//     lookingForAJob: boolean;
-//     lookingForAJobDescription: string
-// }
-
-export const ProfileDataForm: React.FC<ProfileDataFormType
-    & Partial<FormikProps<FormValues>>> = ({userProfile, setEditMode}) => {
-    const dispatch = useAppDispatch()
+export const ProfileDataForm: React.FC<ProfileDataFormType> = ({userProfile, setEditMode, updateProfileTC}) => {
 
     const formik = useFormik({
         initialValues: {
@@ -30,49 +20,9 @@ export const ProfileDataForm: React.FC<ProfileDataFormType
             lookingForAJobDescription: userProfile.lookingForAJobDescription,
             contacts: userProfile.contacts
         },
-
-        validationSchema: Yup.object().shape({
-            fullName: Yup.string()
-                .min(3, 'Must be 3 characters or more')
-                .required('Required'),
-            aboutMe: Yup.string()
-                .min(3, 'Must be 3 characters or more')
-                .required('Required'),
-            lookingForAJob: Yup.boolean()
-                .required('Required'),
-            lookingForAJobDescription: Yup.string()
-                .min(3, 'Must be 3 characters or more')
-                .required('Required'),
-            contacts: Yup.object().shape({
-                github: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-                vk: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-                facebook: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-                instagram: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-                twitter: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-                website: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-                youtube: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-                mainLink: Yup.string()
-                    .url('must be a url')
-                    .nullable(),
-            })
-        }),
+        validationSchema: validationUpdateDataProfile,
         onSubmit: (values, {setSubmitting}) => {
-            // @ts-ignore
-            dispatch(updateProfileTC(values))//  need to fix with types
+            updateProfileTC(values)
             setEditMode(false)
         },
     });

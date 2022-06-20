@@ -3,7 +3,7 @@ import {userAPI} from '../API/api';
 import {Dispatch} from 'redux';
 import {AppStateType, AppThunk} from './redux-store';
 import {createSelector} from 'reselect';
-import {updateObjectInArray} from '../utils/validators/helpers/updateObjectInArray';
+import {updateObjectInArray} from '../helpers/updateObjectInArray';
 
 export type UserType = {
     name: string
