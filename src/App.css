@@ -17,6 +17,7 @@
     grid-template-rows: 60px 1fr; /* 2 строки fr - фрагмент*/
     grid-template-columns: 2fr 10fr; /* 2 столбца*/
     /*grit-gap: 10px*/
+
 }
 
 .app-wrapper-content {

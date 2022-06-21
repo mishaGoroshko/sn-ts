@@ -2,6 +2,8 @@ import {v1} from 'uuid';
 import {profileAPI, ProfileUpdateProperties, userAPI} from '../API/api';
 import {AppThunk} from './redux-store';
 import {RESULTS_CODE_SUCCESS} from '../constants';
+import {AxiosError} from 'axios';
+import {setError} from './app-reducer';
 
 export type PostType = {
     id: string
@@ -133,32 +135,52 @@ export const updateProfileSuccess = (payload: any) =>
 
 // thunk
 export const getUserProfileTC = (userID: number): AppThunk => async dispatch => {
-    let data = await userAPI.getUserForProfile(userID)
-    dispatch(setUserProfile(data))
-    dispatch(initializedProfile())
+    try {
+        let data = await userAPI.getUserForProfile(userID)
+        dispatch(setUserProfile(data))
+        dispatch(initializedProfile())
+    } catch (e) {
+        dispatch(setError((e as AxiosError).message))
+    }
 }
 export const getStatusTC = (userID: number): AppThunk => async dispatch => {
-    let data = await profileAPI.getStatus(userID)
-    dispatch(setStatus(data))
+    try {
+        let data = await profileAPI.getStatus(userID)
+        dispatch(setStatus(data))
+    } catch (e) {
+        dispatch(setError((e as AxiosError).message))
+    }
 }
 export const updateStatusTC = (status: string): AppThunk => async dispatch => {
-    let data = await profileAPI.updateStatus(status)
-    if (data.resultCode === RESULTS_CODE_SUCCESS) {
-        dispatch(setStatus(status))
+    try {
+        let data = await profileAPI.updateStatus(status)
+        if (data.resultCode === RESULTS_CODE_SUCCESS) {
+            dispatch(setStatus(status))
+        }
+    } catch (e) {
+        dispatch(setError((e as AxiosError).message))
     }
 }
 export const updateProfileTC = (payload: ProfileUpdateProperties): AppThunk => async (dispatch, getState) => {
-    const userId = getState().auth.id
-    let data = await profileAPI.updateProfile(payload)
-    if (data.resultCode === RESULTS_CODE_SUCCESS) {
-        dispatch(getUserProfileTC(userId!))
+    try {
+        const userId = getState().auth.id
+        let data = await profileAPI.updateProfile(payload)
+        if (data.resultCode === RESULTS_CODE_SUCCESS) {
+            dispatch(getUserProfileTC(userId!))
+        }
+    } catch (e) {
+        dispatch(setError((e as AxiosError).message))
     }
 }
 
 export const savePhoto = (photoFile: File): AppThunk => async dispatch => {
-    let data = await profileAPI.savePhoto(photoFile)
-    if (data.resultCode === RESULTS_CODE_SUCCESS) {
-        dispatch(savePhotoSuccess(data.data.photos))
+    try {
+        let data = await profileAPI.savePhoto(photoFile)
+        if (data.resultCode === RESULTS_CODE_SUCCESS) {
+            dispatch(savePhotoSuccess(data.data.photos))
+        }
+    } catch (e) {
+        dispatch(setError((e as AxiosError).message))
     }
 }
 

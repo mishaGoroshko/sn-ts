@@ -4,7 +4,9 @@ import {connect} from 'react-redux';
 import {AppStateType} from '../../Redux/redux-store';
 import {
     getStatusTC,
-    getUserProfileTC, savePhoto, updateProfileTC,
+    getUserProfileTC,
+    savePhoto,
+    updateProfileTC,
     updateStatusTC,
     UserProfile
 } from '../../Redux/profile-reducer';
@@ -20,11 +22,10 @@ import {compose} from 'redux';
 import {Preloader} from '../common/Preloader/Preloader';
 import {ProfileUpdateProperties} from '../../API/api';
 
-
 class ProfileContainer extends React.Component<ProfileType & WithRouterType> {
     refreshProfile() {
         // @ts-ignore
-        let userID: number | null = this.props.router.params['*'];
+        let userID: number | null = this.props.router.params.id;
         if (!userID) {
             userID = this.props.authorizedUserId
             if (!userID) {
@@ -45,25 +46,19 @@ class ProfileContainer extends React.Component<ProfileType & WithRouterType> {
 
     componentDidUpdate(prevProps: Readonly<ProfileType & WithRouterType>, prevState: Readonly<{}>, snapshot?: any) {
         // @ts-ignore
-
-        if (this.props.router.params['*'] !== prevProps.router.params['*'])
+        if (this.props.router.params.id !== prevProps.router.params.id)
             this.refreshProfile()
     }
 
 
     render() {
-
         if (!this.props.initialized) {
             return <Preloader isFetching/>
         }
-        //@ts-ignore
-        // if (!this.props.isAuth) this.props.router.navigate('/login', {replace: true})
-
-
         return <Profile {...this.props}
                         savePhoto={this.props.savePhoto}
-                         // @ts-ignore
-                        isOwner={!this.props.router.params['*']}
+            // @ts-ignore
+                        isOwner={!this.props.router.params.id}
                         userProfile={this.props.userProfile}
                         status={this.props.status}
                         updateStatusTC={this.props.updateStatusTC}
@@ -121,7 +116,13 @@ function withRouter<T>(Component: ComponentType<T>) {
 
 export default compose<ComponentType>
 (connect<MapStatePropsType, MapDispatchPropsType, {}, AppStateType>
-    (mapStateToProps, {getUserProfileTC, getStatusTC, updateStatusTC, savePhoto, updateProfileTC}),
+    (mapStateToProps, {
+        getUserProfileTC,
+        getStatusTC,
+        updateStatusTC,
+        savePhoto,
+        updateProfileTC
+    }),
     withRouter,
     withAuthRedirect)
 (ProfileContainer);

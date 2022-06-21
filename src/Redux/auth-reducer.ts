@@ -3,6 +3,8 @@ import {authAPI, securityAPI} from '../API/api';
 import {AppThunk} from './redux-store';
 import {stopSubmit} from 'redux-form';
 import {RESULTS_CODE_CAPTCHA, RESULTS_CODE_SUCCESS} from '../constants';
+import {setError} from './app-reducer';
+import {AxiosError} from 'axios';
 
 
 const initState = {
@@ -48,15 +50,20 @@ export const getAuthUserDataTC = (): AppThunk => async (dispatch: Dispatch) => {
 
 export const loginAuthTC = (email: string, password: string, rememberMe: boolean, captcha: string): AppThunk => async dispatch => {
     const res = await authAPI.login(email, password, rememberMe, captcha)
-    if (res.resultCode === RESULTS_CODE_SUCCESS) {
-        dispatch(getAuthUserDataTC())
-    } else {
-        if (res.resultCode === RESULTS_CODE_CAPTCHA) {
-            dispatch(getCaptchaTC())
+    try {
+        if (res.resultCode === RESULTS_CODE_SUCCESS) {
+            dispatch(getAuthUserDataTC())
+        } else {
+            if (res.resultCode === RESULTS_CODE_CAPTCHA) {
+                dispatch(getCaptchaTC())
+            }
+            let message = res.messages.length > 0 ? res.messages[0] : 'some error'
+            dispatch(stopSubmit('login', {_error: message}))
         }
-        let message = res.messages.length > 0 ? res.messages[0] : 'some error'
-        dispatch(stopSubmit('login', {_error: message}))
+    } catch (e) {
+        dispatch(setError((e as AxiosError).message))
     }
+
 }
 
 export const getCaptchaTC = (): AppThunk => async dispatch => {
