@@ -41,10 +41,16 @@ export type ProfileUpdateProperties = {
     }
 }
 
+export type UsersQueryParams = {
+    count: number
+    page: number
+    term?: string
+    friend?: boolean
+}
 
 export const userAPI = {
-    getUsers: (currentPage: number, pageSize: number) => instance
-        .get<userAPIType>(`users?page=${currentPage}&count=${pageSize}`)
+    getUsers: (params: UsersQueryParams) => instance
+        .get<userAPIType>('users', {params})
         .then(res => res.data),
 
     postFollow: (id: string) => instance
@@ -118,4 +124,5 @@ export const securityAPI = {
         .get<ResponseCaptchaType>(`security/get-captcha-url`)
         .then(res => res.data),
 }
+
 

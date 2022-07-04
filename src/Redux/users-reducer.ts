@@ -1,5 +1,5 @@
 import {v1} from 'uuid';
-import {userAPI} from '../API/api';
+import {userAPI, UsersQueryParams} from '../API/api';
 import {Dispatch} from 'redux';
 import {AppStateType, AppThunk} from './redux-store';
 import {createSelector} from 'reselect';
@@ -24,7 +24,9 @@ let initialState = {
     totalCountUsers: 0,
     currentPage: 1,
     isFetching: false,
-    followArrayId: [] as Array<string>
+    followArrayId: [] as Array<string>,
+    termSearchFilter: '',
+    friendFollowFilter: null as null | boolean,
 }
 
 export type InitialStateUsersType = typeof initialState
@@ -35,7 +37,7 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
             return {
                 ...state,
                 users: updateObjectInArray(state.users, action.payload.userId,
-            'id', {followed: true})
+                    'id', {followed: true})
             }
         case 'UN-FOLLOW':
             return {
@@ -51,6 +53,9 @@ export const UsersReducer = (state: InitialStateUsersType = initialState, action
             return {...state, totalCountUsers: action.payload.totalCount}
         case 'SET-PRELOADER':
             return {...state, isFetching: action.payload.isFetching}
+        case 'SET-TERN-SEARCH-FILTER':
+        case 'SET-FRIEND-FOLLOW-FILTER':
+            return {...state, ...action.payload}
         case 'TOGGLE-DISABLED':
             return {
                 ...state, followArrayId: action.payload.isDisabled
@@ -76,6 +81,8 @@ export type UsersActionsType = followACType
     | setTotalCountACType
     | setPreloaderACType
     | toggleDisabledACType
+    | ReturnType<typeof setTernSearchFilter>
+    | ReturnType<typeof setFriendFollowFilter>
 
 export const follow = (userId: string) =>
     ({type: 'FOLLOW', payload: {userId},} as const)
@@ -99,12 +106,16 @@ export const setPreloader = (isFetching: boolean) => ({
 } as const)
 export const toggleDisabled = (userId: string, isDisabled: boolean) =>
     ({type: 'TOGGLE-DISABLED', payload: {userId, isDisabled}} as const)
+export const setTernSearchFilter = (termSearchFilter: string, ) =>
+    ({type: 'SET-TERN-SEARCH-FILTER', payload: {termSearchFilter}} as const)
+export const setFriendFollowFilter = (friendFollowFilter: boolean | null, ) =>
+    ({type: 'SET-FRIEND-FOLLOW-FILTER', payload: {friendFollowFilter}} as const)
 
-export const getUsersTC = (page: number, pageSize: number): AppThunk => async dispatch => {
+export const getUsersTC = (payload: UsersQueryParams): AppThunk => async dispatch => {
     dispatch(setPreloader(true))
-    dispatch(setCurrentPage(page))
+    dispatch(setCurrentPage(payload.page))
 
-    let data = await userAPI.getUsers(page, pageSize)
+    let data = await userAPI.getUsers(payload)
 
     dispatch(setPreloader(false))
     dispatch(setUsers(data.items))
@@ -145,4 +156,6 @@ export const getTotalCountUsers = (state: AppStateType): number => state.usersPa
 export const getCurrentPage = (state: AppStateType): number => state.usersPage.currentPage
 export const getIsFetching = (state: AppStateType): boolean => state.usersPage.isFetching
 export const getFollowArrayId = (state: AppStateType): Array<string> => state.usersPage.followArrayId
+export const selectTermSearchFilter = (state: AppStateType): string => state.usersPage.termSearchFilter
+export const selectFriendFollowFilter = (state: AppStateType): null | boolean => state.usersPage.friendFollowFilter
 

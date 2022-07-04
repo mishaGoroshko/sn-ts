@@ -9,7 +9,7 @@ import {
     getTotalCountUsers,
     getUsers,
     getUsersTC,
-    postFollowTC,
+    postFollowTC, selectFriendFollowFilter, selectTermSearchFilter,
     toggleDisabled,
     UserType
 } from '../../Redux/users-reducer';
@@ -17,6 +17,7 @@ import {Users} from './Users';
 import {Preloader} from '../common/Preloader/Preloader';
 import {withAuthRedirect} from '../../hoc/withAuthRedirect';
 import {compose} from 'redux';
+import {UsersQueryParams} from '../../API/api';
 
 
 class UsersContainer extends React.Component<UsersType> {
@@ -25,15 +26,15 @@ class UsersContainer extends React.Component<UsersType> {
     // } можно не писать, если больше ничего в constructor не делаем(была попытка написать axios), все sideEffects делать в componentDidMount():
 
     componentDidMount() {
-        let {currentPage, pageSize, getUsersTC} = this.props
+        let {currentPage, pageSize, getUsersTC, termSearchFilter, friendFollowFilter} = this.props
 
-        getUsersTC(currentPage, pageSize)
+        getUsersTC({page: currentPage,count: pageSize, term: termSearchFilter, friend: friendFollowFilter!})
     }
 
     onPageChanged = (pageNumber: number) => {
-        let {pageSize, getUsersTC} = this.props
+        let {pageSize, getUsersTC, termSearchFilter, friendFollowFilter} = this.props
 
-        getUsersTC(pageNumber, pageSize)
+        getUsersTC({page: pageNumber,count: pageSize, term: termSearchFilter, friend: friendFollowFilter!})
     }
 
     render() {
@@ -54,10 +55,12 @@ type MapStatePropsType = {
     currentPage: number
     isFetching: boolean
     followArrayId: Array<string>
+    termSearchFilter: string
+    friendFollowFilter: null | boolean,
 }
 type MapDispatchPropsType = {
     toggleDisabled: (userId: string, isDisabled: boolean) => void
-    getUsersTC: (currentPage: number, pageSize: number) => void
+    getUsersTC: (payload: UsersQueryParams) => void
     postFollowTC: (userId: string) => void
     deleteFollowTC: (userId: string) => void
 }
@@ -72,6 +75,8 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
         currentPage: getCurrentPage(state),
         isFetching: getIsFetching(state),
         followArrayId: getFollowArrayId(state),
+        termSearchFilter: selectTermSearchFilter(state),
+        friendFollowFilter: selectFriendFollowFilter(state)
     }
 }
 

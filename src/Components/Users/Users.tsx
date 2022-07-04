@@ -3,6 +3,7 @@ import s from './Users.module.css';
 import {UserType} from '../../Redux/users-reducer';
 import {Pagination} from '../common/Pagination/Pagination';
 import {User} from './User/User';
+import {SearchForm} from './SearchForm/SearchForm';
 
 type UsersType = {
     totalCountUsers: number
@@ -23,6 +24,7 @@ export const Users: React.FC<UsersType> = (
 
     return (
         <div className={s.header}>
+            <SearchForm/>
             <Pagination totalItemsCount={totalCountUsers}
                         pageSize={pageSize}
                         currentPage={currentPage}
