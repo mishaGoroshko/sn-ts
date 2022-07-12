@@ -31,11 +31,13 @@ export const Users: React.FC<UsersType> = (
                         onPageChanged={onPageChanged}
                         portionSize={10}/>
 
-            {users.map(u => <User key={u.id}
-                                  user={u}
-                                  postFollowTC={postFollowTC}
-                                  followArrayId={followArrayId}
-                                  deleteFollowTC={deleteFollowTC}/>)}
+            {users.length
+                ? users.map(u => <User key={u.id}
+                                       user={u}
+                                       postFollowTC={postFollowTC}
+                                       followArrayId={followArrayId}
+                                       deleteFollowTC={deleteFollowTC}/>)
+                : <span>users not found</span>}
         </div>
     );
 }

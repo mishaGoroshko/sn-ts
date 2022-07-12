@@ -13,10 +13,16 @@ const Navbar: React.FC<NavbarType> = ({...props}) => {
                     Profile
                 </NavLink>
             </div>
+            {/*<div>*/}
+            {/*    <NavLink to={'/dialogs'}*/}
+            {/*             className={({isActive}) => isActive ? s.active : s.item}>*/}
+            {/*        Message*/}
+            {/*    </NavLink>*/}
+            {/*</div>*/}
             <div>
-                <NavLink to={'/dialogs'}
+                <NavLink to={'/chatPage'}
                          className={({isActive}) => isActive ? s.active : s.item}>
-                    Message
+                    Chat
                 </NavLink>
             </div>
             <div>

@@ -1,0 +1,59 @@
+.container {
+  height: 80vh;
+  width: 90%;
+  margin: 2% auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+  .messagesBlock {
+    height: 100%;
+    overflow-y: auto;
+    .message {
+      margin: 15px 15px 0px;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      display: flex;
+
+      .photo {
+        height: 50px;
+        width: 50px;
+        margin: 5px;
+      }
+
+      .textBlock {
+        margin: 5px;
+        display: flex;
+        flex-direction: column;
+
+        .userName {
+          font-weight: bold;
+          font-size: 16px;
+          color: green;
+          text-transform: capitalize;
+        }
+
+        .text {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .inputBlock {
+    margin: 15px;
+
+    .textarea {
+      height: 100px;
+      width: 100%;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      border: none;
+    }
+
+    .button {
+      margin-top: 10px;
+
+    }
+  }
+}
+

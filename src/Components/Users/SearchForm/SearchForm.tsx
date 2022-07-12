@@ -1,6 +1,7 @@
 import React, {ChangeEvent, MutableRefObject, useEffect, useRef} from 'react';
 import {useAppSelector} from '../../../Redux/redux-store';
 import {
+    getIsFetching,
     getPageSize, getUsersTC,
     selectFriendFollowFilter,
     selectTermSearchFilter, setFriendFollowFilter, setTernSearchFilter
@@ -11,6 +12,7 @@ export const SearchForm = () => {
     const termSearchFilter = useAppSelector(selectTermSearchFilter)
     const friendFollowFilter = useAppSelector(selectFriendFollowFilter)
     const pageSize = useAppSelector(getPageSize)
+    const isFetching = useAppSelector(getIsFetching)
     const dispatch = useDispatch()
 
     const timeoutId = useRef() as MutableRefObject<ReturnType<typeof setTimeout>>;
@@ -51,8 +53,10 @@ export const SearchForm = () => {
             <input placeholder={'search users'} type="text"
                    value={termSearchFilter}
                    onChange={onChangeTermHandler}
-                   disabled={false}/>
-            <select value={String(friendFollowFilter)} onChange={onChangeFriendFollow}
+                   disabled={isFetching}/>
+            <select value={String(friendFollowFilter)}
+                    onChange={onChangeFriendFollow}
+                    disabled={isFetching}
                     name="select" id="select">
                 <option value="null">all users</option>
                 <option value="true">follow</option>

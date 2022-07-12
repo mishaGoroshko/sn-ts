@@ -19,6 +19,7 @@ import {NotFound} from './Components/NotFound';
 import {ErrorMessage} from './Components/common/ErrorMessage';
 
 const Dialogs = lazy(() => import("./Components/Dialogs/DialogsContainer"));
+const ChatPage = lazy(() => import("./Components/Chat/ChatPage"));
 const UsersContainer = lazy(() => import("./Components/Users/UsersContainer"));
 const News = lazy(() => import("./Components/News/News"));
 const Music = lazy(() => import("./Components/Music/Music"));
@@ -57,7 +58,8 @@ class App extends React.Component<AppType> {
                             <Route path="/profile" element={<ProfileConnect/>}>
                                 <Route path=":id" element={<Navigate to={'/profile/'}/>}/>
                             </Route>
-                            <Route path="dialogs" element={<Dialogs/>}/>
+                            {/*<Route path="dialogs" element={<Dialogs/>}/>*/}
+                            <Route path="chatPage" element={<ChatPage/>}/>
                             <Route path="users" element={<UsersContainer/>}/>
                             <Route path="news" element={<News/>}/>
                             <Route path="music" element={<Music/>}/>
