@@ -1,18 +1,12 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useEffect, useRef, useState} from 'react';
 import s from './ChatPage.module.scss'
 import userPhoto from '../../Assets/images/userPhoto.png'
+import {MessageType} from '../../API/chatApi';
 
-type UserType = {
-    userId: number
-    photo: string,
-    userName: string
-    message: string
-}
-type UsersType = UserType[]
 
 function ChatPage() {
     const [newMessage, setNewMessage] = useState('')
-    const [messages, setMessages] = useState<UsersType>([])
+    const [messages, setMessages] = useState<MessageType[]>([])
     const [error, setError] = useState('')
 
     const [ws, setWs] = useState<WebSocket | null>(null)
@@ -33,7 +27,7 @@ function ChatPage() {
 
         const closeHandle = () => {
             console.log('WS WAS CLOSED')
-            setError('ERRORRRRRRRRRRRRRRR')
+            setError('reconnect...')
             timeoutID = setTimeout(createChannel, 3000)
         };
 
@@ -87,6 +81,11 @@ function ChatPage() {
         setNewMessage('')
     }
 
+    const onKeyDownAddMessageHandle = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter') addMessageHandle()
+
+    }
+
     return (
         <div className={s.container}>
             <div ref={messagesBlockRef} className={s.messagesBlock}>
@@ -104,10 +103,14 @@ function ChatPage() {
             <div className={s.inputBlock}>
                 <textarea value={newMessage}
                           onChange={onChangeTextHandle}
+                          onKeyDown={onKeyDownAddMessageHandle}
                           className={s.textarea}
-                          placeholder='your message'
+                          // placeholder='your message'
                           name="textarea"
                           id="textarea"></textarea>
+                <label htmlFor="textarea">
+                    write your message here
+                </label>
                 <button onClick={addMessageHandle}
                         disabled={ws == null || readyStatus !== 'ready'}
                         className={s.button}>send

@@ -9,6 +9,7 @@ import {reducer as formReducer} from 'redux-form'
 import {FormAction} from 'redux-form/lib/actions';
 import {AppActionsType, appReducer} from './app-reducer';
 import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
+import {ChatActionsType, chatReducer} from './chat-reducer';
 
 let rootReducer = combineReducers({
     profilePage: profileReducer,
@@ -17,6 +18,7 @@ let rootReducer = combineReducers({
     usersPage: UsersReducer,
     auth: authReducer,
     app: appReducer,
+    chat: chatReducer,
     form: formReducer
 })
 
@@ -28,6 +30,7 @@ export type ProjectActionsType = AuthActionsType
     | UsersActionsType
     | FormAction
     | AppActionsType
+    | ChatActionsType
 // | SidebarActionsType
 
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType,
