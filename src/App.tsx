@@ -18,7 +18,7 @@ import {initializedApp} from './Redux/app-reducer';
 import {NotFound} from './Components/NotFound';
 import {ErrorMessage} from './Components/common/ErrorMessage';
 
-const Dialogs = lazy(() => import("./Components/Dialogs/DialogsContainer"));
+// const Dialogs = lazy(() => import("./Components/Dialogs/DialogsContainer"));
 const ChatPage = lazy(() => import("./Components/Chat/ChatPage"));
 const UsersContainer = lazy(() => import("./Components/Users/UsersContainer"));
 const News = lazy(() => import("./Components/News/News"));

@@ -54,15 +54,15 @@ type MapStatePropsType = {
     totalCountUsers: number
     currentPage: number
     isFetching: boolean
-    followArrayId: Array<string>
+    followArrayId: Array<number>
     termSearchFilter: string
     friendFollowFilter: null | boolean,
 }
 type MapDispatchPropsType = {
     toggleDisabled: (userId: string, isDisabled: boolean) => void
     getUsersTC: (payload: UsersQueryParams) => void
-    postFollowTC: (userId: string) => void
-    deleteFollowTC: (userId: string) => void
+    postFollowTC: (userId: number) => void
+    deleteFollowTC: (userId: number) => void
 }
 
 export type UsersType = MapStatePropsType & MapDispatchPropsType

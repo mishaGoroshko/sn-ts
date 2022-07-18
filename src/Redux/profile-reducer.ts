@@ -136,7 +136,7 @@ export const updateProfileSuccess = (payload: any) =>
 // thunk
 export const getUserProfileTC = (userID: number): AppThunk => async dispatch => {
     try {
-        let data = await userAPI.getUserForProfile(userID)
+        let data = await profileAPI.getProfile(userID)
         dispatch(setUserProfile(data))
         dispatch(initializedProfile())
     } catch (e) {

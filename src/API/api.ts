@@ -13,7 +13,7 @@ type userAPIType = {
     'error': string
 }
 
-type responseAPIType<D = {}> = {
+export type ResponseAPIType<D = {}> = {
     fieldsErrors: any[]
     resultCode: number
     messages: Array<string>
@@ -53,18 +53,13 @@ export const userAPI = {
         .get<userAPIType>('users', {params})
         .then(res => res.data),
 
-    postFollow: (id: string) => instance
-        .post<responseAPIType>(`follow/${id}`)
+    postFollow: (id: number) => instance
+        .post<ResponseAPIType>(`follow/${id}`)
         .then(res => res.data),
 
-    deleteFollow: (id: string) => instance
-        .delete<responseAPIType>(`follow/${id}`)
+    deleteFollow: (id: number) => instance
+        .delete<ResponseAPIType>(`follow/${id}`)
         .then(res => res.data),
-
-    getUserForProfile: (userID: number) => {
-        console.warn('Obsolete method, you must replace your APIs')
-        return profileAPI.getProfile(userID)
-    },
 }
 
 export const profileAPI = {
@@ -77,18 +72,18 @@ export const profileAPI = {
         .then(res => res.data),
 
     updateStatus: (status: string) => instance
-        .put<responseAPIType>(`profile/status`, {status})
+        .put<ResponseAPIType>(`profile/status`, {status})
         .then(res => res.data),
 
     updateProfile: (payload: ProfileUpdateProperties) => instance
-        .put<responseAPIType>(`profile`, payload)
+        .put<ResponseAPIType>(`profile`, payload)
         .then(res => res.data),
 
     savePhoto: (photoFile: File) => {
         let formData = new FormData();
         formData.append('image', photoFile);
         return instance
-            .put<responseAPIType<photosType>>
+            .put<ResponseAPIType<photosType>>
             (`profile/photo`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -102,16 +97,16 @@ export const profileAPI = {
 
 export const authAPI = {
     me: () => instance
-        .get<responseAPIType<{ id: number, email: string, login: string }>>(`auth/me`)
+        .get<ResponseAPIType<{ id: number, email: string, login: string }>>(`auth/me`)
         .then(res => res.data),
 
     login: (email: string, password: string, rememberMe: boolean, captcha?: string) => instance
-        .post<responseAPIType<{ userId: number }>>
+        .post<ResponseAPIType<{ userId: number }>>
         (`auth/login`, {email, password, rememberMe, captcha})
         .then(res => res.data),
 
     logout: () => instance
-        .delete<responseAPIType>(`auth/login`)
+        .delete<ResponseAPIType>(`auth/login`)
         .then(res => res.data),
 }
 

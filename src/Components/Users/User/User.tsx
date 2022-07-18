@@ -6,9 +6,9 @@ import {NavLink} from 'react-router-dom';
 
 type UsersType = {
     user: UserType
-    followArrayId: Array<string>
-    postFollowTC: (userId: string) => void
-    deleteFollowTC: (userId: string) => void
+    followArrayId: Array<number>
+    postFollowTC: (userId: number) => void
+    deleteFollowTC: (userId: number) => void
 }
 
 export const User: React.FC<UsersType> = (

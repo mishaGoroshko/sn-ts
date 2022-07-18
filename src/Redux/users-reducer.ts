@@ -1,5 +1,5 @@
 import {v1} from 'uuid';
-import {userAPI, UsersQueryParams} from '../API/api';
+import {ResponseAPIType, userAPI, UsersQueryParams} from '../API/api';
 import {Dispatch} from 'redux';
 import {AppStateType, AppThunk} from './redux-store';
 import {createSelector} from 'reselect';
@@ -7,15 +7,14 @@ import {updateObjectInArray} from '../helpers/updateObjectInArray';
 
 export type UserType = {
     name: string
-    id: string
-    uniqueUrlName: string
+    id: number
+    uniqueUrlName: string | null
     photos: {
-        small: string
-        large: string
+        small: string | null
+        large: string | null
     },
     followed: boolean
-    status: string
-    location: { city: string, country: string }
+    status: string | null
 }
 
 let initialState = {
@@ -24,7 +23,7 @@ let initialState = {
     totalCountUsers: 0,
     currentPage: 1,
     isFetching: false,
-    followArrayId: [] as Array<string>,
+    followArrayId: [] as Array<number>,
     termSearchFilter: '',
     friendFollowFilter: null as null | boolean,
 }
@@ -84,9 +83,9 @@ export type UsersActionsType = followACType
     | ReturnType<typeof setTernSearchFilter>
     | ReturnType<typeof setFriendFollowFilter>
 
-export const follow = (userId: string) =>
+export const follow = (userId: number) =>
     ({type: 'FOLLOW', payload: {userId},} as const)
-export const unfollow = (userId: string) =>
+export const unfollow = (userId: number) =>
     ({type: 'UN-FOLLOW', payload: {userId},} as const)
 export const setUsers = (users: Array<UserType>) => ({
     type: 'SET-USERS',
@@ -104,11 +103,11 @@ export const setPreloader = (isFetching: boolean) => ({
     type: 'SET-PRELOADER',
     payload: {isFetching},
 } as const)
-export const toggleDisabled = (userId: string, isDisabled: boolean) =>
+export const toggleDisabled = (userId: number, isDisabled: boolean) =>
     ({type: 'TOGGLE-DISABLED', payload: {userId, isDisabled}} as const)
-export const setTernSearchFilter = (termSearchFilter: string, ) =>
+export const setTernSearchFilter = (termSearchFilter: string,) =>
     ({type: 'SET-TERN-SEARCH-FILTER', payload: {termSearchFilter}} as const)
-export const setFriendFollowFilter = (friendFollowFilter: boolean | null, ) =>
+export const setFriendFollowFilter = (friendFollowFilter: boolean | null,) =>
     ({type: 'SET-FRIEND-FOLLOW-FILTER', payload: {friendFollowFilter}} as const)
 
 export const getUsersTC = (payload: UsersQueryParams): AppThunk => async dispatch => {
@@ -116,14 +115,13 @@ export const getUsersTC = (payload: UsersQueryParams): AppThunk => async dispatc
     dispatch(setCurrentPage(payload.page))
 
     let data = await userAPI.getUsers(payload)
-
     dispatch(setPreloader(false))
     dispatch(setUsers(data.items))
     dispatch(setTotalCount(data.totalCount))
 }
 
 
-const followUnfollowFlow = async (dispatch: Dispatch, userId: string, apiMethod: any, actionCreater: (userId: string) => followACType | unfollowACType) => {
+const followUnfollowFlow = async (dispatch: Dispatch, userId: number, apiMethod: (userId: number) => Promise<ResponseAPIType>, actionCreater: (userId: number) => followACType | unfollowACType) => {
     dispatch(toggleDisabled(userId, true))
 
     let data = await apiMethod(userId)
@@ -132,12 +130,12 @@ const followUnfollowFlow = async (dispatch: Dispatch, userId: string, apiMethod:
     data.resultCode === 0 && dispatch(actionCreater(userId))
 }
 
-export const postFollowTC = (userId: string): AppThunk => dispatch =>
-    followUnfollowFlow(dispatch, userId, userAPI.postFollow, follow)
+export const postFollowTC = (userId: number): AppThunk => async dispatch =>
+    await followUnfollowFlow(dispatch, userId, userAPI.postFollow, follow)
 
 
-export const deleteFollowTC = (userId: string): AppThunk => dispatch =>
-    followUnfollowFlow(dispatch, userId, userAPI.deleteFollow, unfollow)
+export const deleteFollowTC = (userId: number): AppThunk => async dispatch =>
+    await followUnfollowFlow(dispatch, userId, userAPI.deleteFollow, unfollow)
 
 
 //selectors
@@ -155,7 +153,7 @@ export const getPageSize = (state: AppStateType): number => state.usersPage.page
 export const getTotalCountUsers = (state: AppStateType): number => state.usersPage.totalCountUsers
 export const getCurrentPage = (state: AppStateType): number => state.usersPage.currentPage
 export const getIsFetching = (state: AppStateType): boolean => state.usersPage.isFetching
-export const getFollowArrayId = (state: AppStateType): Array<string> => state.usersPage.followArrayId
+export const getFollowArrayId = (state: AppStateType): Array<number> => state.usersPage.followArrayId
 export const selectTermSearchFilter = (state: AppStateType): string => state.usersPage.termSearchFilter
 export const selectFriendFollowFilter = (state: AppStateType): null | boolean => state.usersPage.friendFollowFilter
 

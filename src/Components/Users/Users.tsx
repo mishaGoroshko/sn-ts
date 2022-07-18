@@ -11,9 +11,9 @@ type UsersType = {
     currentPage: number
     onPageChanged: (pageNumber: number) => void
     users: UserType[]
-    followArrayId: Array<string>
-    postFollowTC: (userId: string) => void
-    deleteFollowTC: (userId: string) => void
+    followArrayId: Array<number>
+    postFollowTC: (userId: number) => void
+    deleteFollowTC: (userId: number) => void
 }
 
 export const Users: React.FC<UsersType> = (

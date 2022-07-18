@@ -33,10 +33,8 @@ export type ProjectActionsType = AuthActionsType
     | ChatActionsType
 // | SidebarActionsType
 
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType,
-    AppStateType,
-    unknown,
-    ProjectActionsType>
+export type AppThunk<ReturnType = void> =
+    ThunkAction<ReturnType, AppStateType, unknown, ProjectActionsType>
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
